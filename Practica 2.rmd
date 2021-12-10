@@ -1,0 +1,39 @@
+---
+title: "Practica 2"
+author: "Brais Santos Negreira / Jorge Álvarez Gracia"
+date: "Diciembre 2021"
+output: 
+  html_document:
+    highlight: default
+    number_sections: yes
+    theme: cosmo
+    toc: yes
+    toc_depth: 2
+---
+
+******
+#  Descripción del dataset. ¿Por qué es importante y qué pregunta/problema pretende responder?
+
+******
+
+El conjunto de datos que hemos elegido está en la siguiente url: https://www.kaggle.com/fedesoriano/heart-failure-prediction. Se ha escogido ya que es una temática muy interesante las enfermedades cardiovasculares y al mismo tiempo comprobamos que haya campos numéricos y categóricos. Lo que pretende responder es como afecta o no las enfermedades cardiovasculares en función de las caracterísitcas de las personas.
+
+******
+# Integración y selección de los datos de interés a analizar
+
+******
+
+Se lee el fichero "heart.csv".
+```{r,eval=TRUE,echo=TRUE}
+
+heart <- read.csv("heart.csv",sep=",")
+
+```
+
+Se muestra un resumen de las variables.
+
+```{r,eval=TRUE,echo=TRUE}
+
+summary(heart)
+
+```
