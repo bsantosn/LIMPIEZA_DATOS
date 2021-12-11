@@ -180,6 +180,84 @@ boxplot.stats(heart$Cholesterol)$out
 
 __MaxHR__ :
 
+Se puede apreciar que hay dos valores extremos: 60 y 63. Esas frecuencias cardíacas __máximas__ son muy bajas y por tanto lo podemos detectar como valores extraños. 
+```{r,eval=TRUE,echo=TRUE}
+
+boxplot(heart$MaxHR,main="Frecuencia cardíaca máxima alcanzada")
+
+```
+
+```{r,eval=TRUE,echo=TRUE}
+
+boxplot.stats(heart$MaxHR)$out
+
+```
+A continuación, sustituímos esos valores por NA y luego lo trataremos mediante Knn.
+
+```{r,eval=TRUE,echo=TRUE}
+
+posMaxHR <- which(heart$MaxHR==60 | heart$MaxHR==63)
 
 
-En los campos FastingBS y HeartDisease no hacemos uso del boxplot debido a que son valores dicotómicos (0,1).
+heart$MaxHR[posMaxHR] <- NA
+
+
+```
+
+
+## Tratamiento de valores perdidos
+
+En los dos apartados anteriores hemos visto como las variables RestingBP y Cholesterol tenían valores vacíos y como la variable MaxHR tenía valores extremos que no cuadraban.
+<br>
+Para ello, pusimos eso valores como pérdidos (NA).
+
+<br>
+Para solucionar estos valores perdidos, vamos a hacer uso de la función knn.
+
+```{r,eval=TRUE,echo=TRUE}
+
+library(VIM)
+
+RestingBP_new <- kNN(heart,variable="RestingBP",dist_var =c("Age","Sex","ChestPainType","FastingBS","RestingECG","ExerciseAngina","ST_Slope","HeartDisease"),k=3)
+RestingBP_new <- RestingBP_new$RestingBP
+
+heart$RestingBP <- RestingBP_new
+
+Cholesterol_new <- kNN(heart,variable="Cholesterol",dist_var =c("Age","Sex","ChestPainType","FastingBS","RestingECG","ExerciseAngina","ST_Slope","HeartDisease"),k=3)
+Cholesterol_new <- Cholesterol_new$Cholesterol
+
+heart$Cholesterol <- Cholesterol_new
+
+
+MaxHR_new <- kNN(heart,variable="MaxHR",dist_var =c("Age","Sex","ChestPainType","FastingBS","RestingECG","ExerciseAngina","ST_Slope","HeartDisease"),k=3)
+MaxHR_new <- MaxHR_new$MaxHR
+
+heart$MaxHR <- MaxHR_new
+
+
+```
+
+
+Se comprueba que ya no hay valores pérdidos en esas posiciones:
+
+```{r,eval=TRUE,echo=TRUE}
+
+
+heart$RestingBP[posRestingBP]
+heart$Cholesterol[posCholesterol]
+heart$MaxHR[posMaxHR]
+
+
+```
+Observamos que los valores NA fueron sustitídos por otros en función de las características de los demás atributos.
+<br>
+Finalmente, vemos que ya no hay ningun valor perdido.
+
+```{r,eval=TRUE,echo=TRUE}
+
+colSums(is.na(heart))
+
+```
+
+# Análisis de los datos
+
