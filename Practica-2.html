@@ -192,6 +192,7 @@ pre code {
 <ul>
 <li><a href="#análisis-descriptivo-de-las-variables"><span class="toc-section-number">4.1</span> Análisis descriptivo de las variables</a></li>
 <li><a href="#estudio-normalidad-de-las-variables"><span class="toc-section-number">4.2</span> Estudio normalidad de las variables</a></li>
+<li><a href="#contraste-de-hipótesis"><span class="toc-section-number">4.3</span> Contraste de hipótesis</a></li>
 </ul></li>
 </ul>
 </div>
@@ -563,6 +564,54 @@ qqline(heart$Age_nor)</code></pre>
 <div id="teorema-del-límite-central" class="section level3" number="4.2.2">
 <h3><span class="header-section-number">4.2.2</span> Teorema del límite central</h3>
 <p>Dado que el tamaño de este dataset es &gt;30, se puede decir por el teorema del límite central que las variables mencionadas anteriormente siguen una distribución normal.</p>
+</div>
+</div>
+<div id="contraste-de-hipótesis" class="section level2" number="4.3">
+<h2><span class="header-section-number">4.3</span> Contraste de hipótesis</h2>
+<div id="queremos-saber-si-el-colesterol-de-las-mujeres-es-mayor-que-el-de-los-hombres" class="section level3" number="4.3.1">
+<h3><span class="header-section-number">4.3.1</span> Queremos saber si el colesterol de las mujeres es mayor que el de los hombres</h3>
+<p>Primero, calculamos dos variables para obtener el colesterol de hombres y mujeres.</p>
+<pre class="r"><code>colHom &lt;- heart$Cholesterol[heart$Sex==&quot;M&quot;]
+
+colMuj &lt;- heart$Cholesterol[heart$Sex==&quot;F&quot;]</code></pre>
+<p>Como hipotesis nula, se quiere saber si el colesterol en mujeres es igual que en el de los hombres. <br> Como hipotesis alternativa se quiere saber si el colesterol en mujeres es mayor que en hombres.</p>
+<p><span class="math display">\[
+\left\{
+\begin{array}{ll}
+H_{0}: &amp;  \mu_1=\mu_2 \\
+H_{1}: &amp; \mu_1&gt;\mu_2
+\end{array}
+\right.\\
+\ Hipótesis\ unilateral
+\]</span> Por el teorema del límite central, asumimos normalidad ya que tenemos una muestra con n&gt;30. Esto, es un contraste de hipótesis de dos muestras independientes sobre la media (varianzas desconocidas). Es un test unilateral por la derecha. <br></p>
+<p>Ahora, comprobamos la homocesdasticidad.</p>
+<pre class="r"><code>var.test(colMuj, colHom)</code></pre>
+<pre><code>## 
+##  F test to compare two variances
+## 
+## data:  colMuj and colHom
+## F = 1.3623, num df = 192, denom df = 724, p-value = 0.005232
+## alternative hypothesis: true ratio of variances is not equal to 1
+## 95 percent confidence interval:
+##  1.095376 1.719717
+## sample estimates:
+## ratio of variances 
+##           1.362271</code></pre>
+<p>Se observa que p-value &lt; 0.05. Por tanto, las varianzas no son iguales. <br></p>
+<p>A continuación, aplicamos el test de este contraste de hipótesis.</p>
+<pre class="r"><code>t.test( colMuj,colHom , var.equal=FALSE, alternative = &quot;greater&quot;)</code></pre>
+<pre><code>## 
+##  Welch Two Sample t-test
+## 
+## data:  colMuj and colHom
+## t = 3.4263, df = 271.62, p-value = 0.0003533
+## alternative hypothesis: true difference in means is greater than 0
+## 95 percent confidence interval:
+##  8.591104      Inf
+## sample estimates:
+## mean of x mean of y 
+##  256.0933  239.5172</code></pre>
+<p>Se aprecia, que p-value &lt; 0.05. Por tanto, se rechaza la hipótesis nula y se acepta la alternativa de que las mujeres tiene más colesterol que los hombres.</p>
 </div>
 </div>
 </div>

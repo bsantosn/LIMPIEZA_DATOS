@@ -448,3 +448,55 @@ Nos da la misma información que la variable Age. Por tanto, podemos decir que n
 
 Dado que el tamaño de este dataset es >30, se puede decir por el teorema del límite central que las variables mencionadas anteriormente siguen una distribución normal.
 
+
+## Contraste de hipótesis
+
+### Queremos saber si el colesterol de las mujeres es mayor que el de los hombres
+
+Primero, calculamos dos variables para obtener el colesterol de hombres y mujeres.
+```{r,eval=TRUE,echo=TRUE}
+
+colHom <- heart$Cholesterol[heart$Sex=="M"]
+
+colMuj <- heart$Cholesterol[heart$Sex=="F"]
+
+```
+
+Como hipotesis nula, se quiere saber si el colesterol en mujeres es igual que en el de los hombres.
+<br>
+Como hipotesis alternativa se quiere saber si el colesterol en mujeres es mayor que en hombres.
+
+$$
+\left\{
+\begin{array}{ll}
+H_{0}: &  \mu_1=\mu_2 \\
+H_{1}: & \mu_1>\mu_2
+\end{array}
+\right.\\
+\ Hipótesis\ unilateral
+$$
+Por el teorema del límite central, asumimos normalidad ya que tenemos una muestra con n>30. Esto, es un contraste de hipótesis de dos muestras independientes sobre la media (varianzas desconocidas).
+Es un test unilateral por la derecha.
+<br>
+
+Ahora, comprobamos la homocesdasticidad.
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+var.test(colMuj, colHom)
+
+```
+Se observa que p-value < 0.05. Por tanto, las varianzas no son iguales.
+<br>
+
+A continuación, aplicamos el test de este contraste de hipótesis.
+
+```{r,eval=TRUE,echo=TRUE}
+
+t.test( colMuj,colHom , var.equal=FALSE, alternative = "greater")
+
+```
+
+Se aprecia, que p-value < 0.05. Por tanto, se rechaza la hipótesis nula y se acepta la alternativa de que las mujeres tiene más colesterol que los hombres.
+
