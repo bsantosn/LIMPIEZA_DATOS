@@ -17,6 +17,8 @@ output:
 ******
 
 El conjunto de datos que hemos elegido está en la siguiente url: https://www.kaggle.com/fedesoriano/heart-failure-prediction. Se ha escogido ya que es una temática muy interesante las enfermedades cardiovasculares y al mismo tiempo comprobamos que haya campos numéricos y categóricos. Lo que pretende responder es como afecta o no las enfermedades cardiovasculares en función de las caracterísitcas de las personas.
+<br>
+Este dataset se obtiene de la siguiente url: https://www.kaggle.com/fedesoriano/heart-failure-prediction
 
 ******
 # Integración y selección de los datos de interés a analizar
@@ -30,6 +32,30 @@ heart <- read.csv("heart.csv",sep=",")
 
 ```
 
+
+## Tipos de variables
+A continuación, obtenemos el listado de variables:
+
+```{r,eval=TRUE,echo=TRUE}
+
+str(heart)
+
+```
+
+<li> __Age__ : edad del paciente.</li> 
+<li> __Sex__ : sexo del paciente. </li> 
+<li> __ChestPainType__ : Tipo de dolor del pecho. </li>
+<li> __RestingBP__ : presión arterial en reposo (sistólica). </li>
+<li> __Cholesterol__ : colesterol sérico. </li>
+<li> __FastingBS__ : azúcar en sangre en ayunas.</li>
+<li> __RestingECG__: resultados del electrocardiograma en reposo. </li>
+<li> __MaxHR__: frecuencia cardíaca máxima alcanzada. </li>
+<li> __ExerciseAngina__: angina inducida por el ejercicio. </li>
+<li> __Oldpeak__ : ejercicio inducido por la depresión (ST) en relación con el descanso. </li>
+<li> __ST_Slope__ : pendiente del segmento ST del ejercicio pico. </li>
+<li> __HeartDisease__   : clase de salida. </li>
+
+<br>
 Se muestra un resumen de las variables.
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -37,3 +63,123 @@ Se muestra un resumen de las variables.
 summary(heart)
 
 ```
+
+A partir de esto, se puede concluir con que hay 12 variables y 918 observaciones. También se aprecia que en el dataset hay 3 tipos de datos:
+
+<li> Variables numéricas: Oldpeak. </li>
+<li> Variables de tipo carácter: Sex, ChestPainType, RestingECG, ExerciseAngina, ST_Slope. </li>
+<li> Varaibles de tipo entero: Age, RestingBP, Cholesterol, FastingBS, MaxHR, HeartDisease. </li>
+
+
+## Selección de variables
+
+En este punto vamos a decidir cuales de estas 12 variables queremos para el análisis.
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+if (!require('dplyr')) install.packages('dplyr'); library('dplyr')
+
+heart <- select(heart,-Oldpeak)
+
+```
+
+Decidimos prescindir del campo "Oldpeak" ya que es una variable que no nos da mucha información para poder plantearla bien en nuestro análisis.
+
+
+# Limpieza de datos
+
+En este punto, vamos a tratar los datos para ver si contienen ceros o valores NA. También buscaremos que posibles outliers hay.
+
+## Identificación de valores vacíos
+
+Se aprecia que no hay ningun valor NA. 
+
+```{r,eval=TRUE,echo=TRUE}
+
+colSums(is.na(heart))
+
+```
+A continuación, comprobaremos si algún campo tiene un valor 0.
+
+```{r,eval=TRUE,echo=TRUE}
+
+colSums(heart == 0)
+
+```
+Viendo esto, se puede decir que no tiene sentido que los campos RestingBP y Cholesterol tengan ceros. En este caso, podemos hablar de información perdida.
+
+```{r,eval=TRUE,echo=TRUE}
+
+posRestingBP <- which(heart$RestingBP == 0)
+
+posCholesterol <- which(heart$Cholesterol == 0)
+
+heart$RestingBP[posRestingBP] <- NA
+
+heart$Cholesterol[posCholesterol] <- NA
+
+
+```
+
+Para esos 0, hemos metido NA ya que es un valor desconocido y más adelante miraremos mediante Knn como tratar esos datos.
+
+
+## Identificación de valores extremos
+
+En este apartado, se va a mostrar el diagrama de cajas de cada una de las variables numéricas para comprobar si hay posibles outliers.
+
+__Age__:
+
+Se aprecia que en la variable "Age" no hay ningún valor extremo.
+```{r,eval=TRUE,echo=TRUE}
+
+boxplot(heart$Age,main="Edad del paciente")
+
+```
+```{r,eval=TRUE,echo=TRUE}
+
+boxplot.stats(heart$Age)$out
+
+```
+
+
+__RestingBP__:
+
+En el campo "RestingBP" se observa algunos outliers, pero no se eliminarán debido a que la presión arterial sistólica puede tener valores superiores a 180 (esto sería una crisis de hipertensión).
+
+```{r,eval=TRUE,echo=TRUE}
+
+boxplot(heart$RestingBP,main="Presión arterial en reposo")
+
+```
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+boxplot.stats(heart$RestingBP)$out
+
+```
+
+__Cholesterol__:
+
+En esta variable se aprecian una serie de valores extremos, pero por el contrario no es extraño ya que un colesterol de 603 se puede tener (https://www.tuotromedico.com/parametros/colesterol-en-sangre-alto.htm), aunque es un valor muy elevado. También se puede tener el valor 100 que es óptimo.
+```{r,eval=TRUE,echo=TRUE}
+
+boxplot(heart$Cholesterol,main="Colesterol")
+
+```
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+boxplot.stats(heart$Cholesterol)$out
+
+```
+
+
+__MaxHR__ :
+
+
+
+En los campos FastingBS y HeartDisease no hacemos uso del boxplot debido a que son valores dicotómicos (0,1).
