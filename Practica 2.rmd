@@ -12,16 +12,17 @@ output:
 ---
 
 ******
-#  Descripción del dataset. ¿Por qué es importante y qué pregunta/problema pretende responder?
+#  Introducción
+
+## Elección del DataSet
 
 ******
 
 El conjunto de datos que hemos elegido está en la siguiente url: https://www.kaggle.com/fedesoriano/heart-failure-prediction. Se ha escogido ya que es una temática muy interesante las enfermedades cardiovasculares y al mismo tiempo comprobamos que haya campos numéricos y categóricos. Lo que pretende responder es como afecta o no las enfermedades cardiovasculares en función de las caracterísitcas de las personas.
-<br>
-Este dataset se obtiene de la siguiente url: https://www.kaggle.com/fedesoriano/heart-failure-prediction
+
 
 ******
-# Integración y selección de los datos de interés a analizar
+# Carga del dataset
 
 ******
 
@@ -33,7 +34,7 @@ heart <- read.csv("heart.csv",sep=",")
 ```
 
 
-## Tipos de variables
+## Explicación de las variables
 A continuación, obtenemos el listado de variables:
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -68,64 +69,34 @@ A partir de esto, se puede concluir con que hay 12 variables y 918 observaciones
 
 <li> Variables numéricas: Oldpeak. </li>
 <li> Variables de tipo carácter: Sex, ChestPainType, RestingECG, ExerciseAngina, ST_Slope. </li>
-<li> Varaibles de tipo entero: Age, RestingBP, Cholesterol, FastingBS, MaxHR, HeartDisease. </li>
+<li> Variables de tipo entero: Age, RestingBP, Cholesterol, FastingBS, MaxHR, HeartDisease. </li>
 
 
-## Selección de variables
 
-En este punto vamos a decidir cuales de estas 12 variables queremos para el análisis.
+# Preprocesado de datos
 
+## Conersión y estandarización
 
-```{r,eval=TRUE,echo=TRUE}
-
-if (!require('dplyr')) install.packages('dplyr'); library('dplyr')
-
-heart <- select(heart,-Oldpeak)
-
-```
-
-Decidimos prescindir del campo "Oldpeak" ya que es una variable que no nos da mucha información para poder plantearla bien en nuestro análisis.
-
-
-# Limpieza de datos
-
-En este punto, vamos a tratar los datos para ver si contienen ceros o valores NA. También buscaremos que posibles outliers hay.
-
-## Identificación de valores vacíos
-
-Se aprecia que no hay ningun valor NA. 
+Pasamos los valores int a numeric y los char a factor.
 
 ```{r,eval=TRUE,echo=TRUE}
 
-colSums(is.na(heart))
-
-```
-A continuación, comprobaremos si algún campo tiene un valor 0.
-
-```{r,eval=TRUE,echo=TRUE}
-
-colSums(heart == 0)
-
-```
-Viendo esto, se puede decir que no tiene sentido que los campos RestingBP y Cholesterol tengan ceros. En este caso, podemos hablar de información perdida.
-
-```{r,eval=TRUE,echo=TRUE}
-
-posRestingBP <- which(heart$RestingBP == 0)
-
-posCholesterol <- which(heart$Cholesterol == 0)
-
-heart$RestingBP[posRestingBP] <- NA
-
-heart$Cholesterol[posCholesterol] <- NA
-
+heart$Age <- as.numeric(heart$Age)
+heart$Sex <- as.factor(heart$Sex)
+heart$ChestPainType <- as.factor(heart$ChestPainType)
+heart$RestingBP <- as.numeric(heart$RestingBP)
+heart$Cholesterol <- as.numeric(heart$Cholesterol)
+heart$FastingBS <- as.numeric(heart$FastingBS)
+heart$RestingECG  <- as.factor(heart$RestingECG)
+heart$MaxHR <- as.numeric(heart$MaxHR)
+heart$ExerciseAngina <- as.factor(heart$ExerciseAngina)
+heart$ST_Slope <- as.factor(heart$ST_Slope)
+heart$HeartDisease <- as.numeric(heart$HeartDisease)
 
 ```
 
-Para esos 0, hemos metido NA ya que es un valor desconocido y más adelante miraremos mediante Knn como tratar esos datos.
 
-
-## Identificación de valores extremos
+## Estudio de outliers
 
 En este apartado, se va a mostrar el diagrama de cajas de cada una de las variables numéricas para comprobar si hay posibles outliers.
 
@@ -137,6 +108,7 @@ Se aprecia que en la variable "Age" no hay ningún valor extremo.
 boxplot(heart$Age,main="Edad del paciente")
 
 ```
+
 ```{r,eval=TRUE,echo=TRUE}
 
 boxplot.stats(heart$Age)$out
@@ -204,19 +176,69 @@ heart$MaxHR[posMaxHR] <- NA
 
 ```
 
+Se aplica kNN para ponerle un valor en función de sus vecinos más cercanos.
 
-## Tratamiento de valores perdidos
+```{r,eval=TRUE,echo=TRUE}
+library(VIM)
 
-En los dos apartados anteriores hemos visto como las variables RestingBP y Cholesterol tenían valores vacíos y como la variable MaxHR tenía valores extremos que no cuadraban.
-<br>
-Para ello, pusimos eso valores como pérdidos (NA).
+MaxHR_new <- kNN(heart,variable="MaxHR",dist_var =c("Age","Sex","ChestPainType","FastingBS","RestingECG","ExerciseAngina","ST_Slope","HeartDisease"),k=3)
+MaxHR_new <- MaxHR_new$MaxHR
+
+heart$MaxHR <- MaxHR_new
+
+
+```
+
+Se comprueba  que en esa posición hay otro valor diferente.
+
+```{r,eval=TRUE,echo=TRUE}
+
+heart$MaxHR[posMaxHR]
+
+
+```
+
+
+
+## Estudio de Valores nulos
+
+Se aprecia que no hay ningun valor NA. 
+
+```{r,eval=TRUE,echo=TRUE}
+
+colSums(is.na(heart))
+
+```
+A continuación, comprobaremos si algún campo tiene un valor 0.
+
+```{r,eval=TRUE,echo=TRUE}
+
+colSums(heart == 0)
+
+```
+Viendo esto, se puede decir que no tiene sentido que los campos RestingBP y Cholesterol tengan ceros. En este caso, podemos hablar de información perdida.
+
+```{r,eval=TRUE,echo=TRUE}
+
+posRestingBP <- which(heart$RestingBP == 0)
+
+posCholesterol <- which(heart$Cholesterol == 0)
+
+heart$RestingBP[posRestingBP] <- NA
+
+heart$Cholesterol[posCholesterol] <- NA
+
+
+```
+
+Para esos 0, hemos metido NA ya que es un valor desconocido y ahora miraremos mediante Knn como tratar esos datos.
 
 <br>
 Para solucionar estos valores perdidos, vamos a hacer uso de la función knn.
 
 ```{r,eval=TRUE,echo=TRUE}
 
-library(VIM)
+
 
 RestingBP_new <- kNN(heart,variable="RestingBP",dist_var =c("Age","Sex","ChestPainType","FastingBS","RestingECG","ExerciseAngina","ST_Slope","HeartDisease"),k=3)
 RestingBP_new <- RestingBP_new$RestingBP
@@ -229,14 +251,10 @@ Cholesterol_new <- Cholesterol_new$Cholesterol
 heart$Cholesterol <- Cholesterol_new
 
 
-MaxHR_new <- kNN(heart,variable="MaxHR",dist_var =c("Age","Sex","ChestPainType","FastingBS","RestingECG","ExerciseAngina","ST_Slope","HeartDisease"),k=3)
-MaxHR_new <- MaxHR_new$MaxHR
 
-heart$MaxHR <- MaxHR_new
 
 
 ```
-
 
 Se comprueba que ya no hay valores pérdidos en esas posiciones:
 
@@ -245,10 +263,11 @@ Se comprueba que ya no hay valores pérdidos en esas posiciones:
 
 heart$RestingBP[posRestingBP]
 heart$Cholesterol[posCholesterol]
-heart$MaxHR[posMaxHR]
+
 
 
 ```
+
 Observamos que los valores NA fueron sustitídos por otros en función de las características de los demás atributos.
 <br>
 Finalmente, vemos que ya no hay ningun valor perdido.
@@ -259,5 +278,173 @@ colSums(is.na(heart))
 
 ```
 
+
+## Normalización 
+
+En este apartado, lo que vamos a hacer es normalizar el campo Age usando min-max. Se creará un nuevo campo llamado Age_nor y se añadirá al dataset.
+
+```{r,eval=TRUE,echo=TRUE}
+
+Age_nor <- (2*(heart$Age-min(heart$Age))/(max(heart$Age)-min(heart$Age)))-1
+heart <- cbind(heart,Age_nor)
+
+```
+
+Estos datos, están en el intervalo [-1,1]
+
+```{r,eval=TRUE,echo=TRUE}
+
+min(heart$Age_nor)
+max(heart$Age_nor)
+
+```
+
+## Discretización de variables
+
+En esta apartado, también usaremos la variable "Age" para discretizarla en diferentes rangos y se añadirá al dataset con el nombre Age_dis.
+
+```{r,eval=TRUE,echo=TRUE}
+
+Age_dist <- cut(heart$Age, breaks = c(0,40,60,80), labels = c("(0-40]","(40,60]","(60,80]"))
+
+heart <- cbind(heart,Age_dist)
+
+```
+
+
+
 # Análisis de los datos
+
+## Análisis descriptivo de las variables
+
+Ahora, tenemos el dataset sin valores vacíos así como nuevas variables normalizadas y discretas.
+<br>
+Por lo tanto, se muestra un resumen del dataset en el cual podemos ver la media, moda, cuartiles y valores mínimos y máximos en el caso de variables numéricas.
+En el caso de los factores, podemos ver el número de ocurrencias que tiene dicho valor.
+
+```{r,eval=TRUE,echo=TRUE}
+
+summary(heart)
+
+```
+## Estudio normalidad de las variables
+
+### Comprobación de la normalidad
+
+En este apartado, comprobaremos la normalidad de las variables numéricas, pero las que no son dicotómicas.
+
+__Age__
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+qqnorm(heart$Age)
+qqline(heart$Age)
+
+```
+A simple vista, se puede ver que los datos están por la recta menos por los lados y podríamos asumir normalidad. De todas formas comprobaremos esto con el test de shapiro y Lilliefors.
+
+```{r,eval=TRUE,echo=TRUE}
+
+shapiro.test(heart$Age)
+
+```
+
+```{r,eval=TRUE,echo=TRUE}
+
+library(nortest)
+lillie.test(heart$Age)
+
+```
+
+Viendo ambos test, se puede apreciar que no sigue una distribucción normal la variable "Age".
+
+__RestingBP__
+
+```{r,eval=TRUE,echo=TRUE}
+
+qqnorm(heart$RestingBP)
+qqline(heart$RestingBP)
+
+```
+
+Tal como se aprecia, los valores no suelen estar en la recta y por lo tanto no sigue una distribucción normal.
+
+__Cholesterol__
+
+```{r,eval=TRUE,echo=TRUE}
+
+qqnorm(heart$Cholesterol)
+qqline(heart$Cholesterol)
+
+```
+
+Se aprecia que bastantes puntos están muy por fuera de la recta. Con esto, concluímos que el campo Cholesterol no sigue una distribución normal.
+
+__MaxHR__
+
+```{r,eval=TRUE,echo=TRUE}
+
+qqnorm(heart$MaxHR)
+qqline(heart$MaxHR)
+
+```
+
+Se observa que los puntos suelen seguir la recta, menos en algunos lados.
+<br>
+Para estar más seguros aplicamos los test de shapiro y Lilliefors.
+
+```{r,eval=TRUE,echo=TRUE}
+
+shapiro.test(heart$MaxHR)
+
+```
+```{r,eval=TRUE,echo=TRUE}
+
+lillie.test(heart$MaxHR)
+
+```
+
+Según el test de shapiro, podemos afirmar que la variable MaxHR, pero según el test de lillie no.
+
+__Oldpeak__
+
+```{r,eval=TRUE,echo=TRUE}
+
+qqnorm(heart$Oldpeak)
+qqline(heart$Oldpeak)
+
+```
+
+A simple vista, se observa que muchos puntos están fuera de la recta y con esto podemos decir que no sigue una distribución normal.
+
+__Age_nor__
+
+```{r,eval=TRUE,echo=TRUE}
+
+qqnorm(heart$Age_nor)
+qqline(heart$Age_nor)
+
+```
+
+Se aprecia que muchos puntos siguen la recta ( similar a la variable Age sin normalizar ).
+<br>
+A continuación, aplicamos los siguientes test:
+
+```{r,eval=TRUE,echo=TRUE}
+
+shapiro.test(heart$Age_nor)
+
+```
+
+```{r,eval=TRUE,echo=TRUE}
+
+lillie.test(heart$Age_nor)
+
+```
+Nos da la misma información que la variable Age. Por tanto, podemos decir que no sigue una distribución normal.
+
+### Teorema del límite central
+
+Dado que el tamaño de este dataset es >30, se puede decir por el teorema del límite central que las variables mencionadas anteriormente siguen una distribución normal.
 
