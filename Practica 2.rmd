@@ -469,8 +469,8 @@ Como hipotesis alternativa se quiere saber si el colesterol en mujeres es mayor 
 $$
 \left\{
 \begin{array}{ll}
-H_{0}: &  \mu_1=\mu_2 \\
-H_{1}: & \mu_1>\mu_2
+H_{0}: &  \mu_M=\mu_H \\
+H_{1}: & \mu_M>\mu_H
 \end{array}
 \right.\\
 \ Hipótesis\ unilateral
@@ -500,3 +500,53 @@ t.test( colMuj,colHom , var.equal=FALSE, alternative = "greater")
 
 Se aprecia, que p-value < 0.05. Por tanto, se rechaza la hipótesis nula y se acepta la alternativa de que las mujeres tiene más colesterol que los hombres.
 
+### Azúcar en sangre es mayor en hombres que en mujeres teniendo ambos enfermedades cardíacas
+
+
+Primero, calculamos dos variables para obtener las enfermades cardíacas de hombres y mujeres.
+```{r,eval=TRUE,echo=TRUE}
+
+carHom <- heart$FastingBS[heart$Sex=="M" & heart$HeartDisease=="1"]
+
+carMuj <- heart$FastingBS[heart$Sex=="F" & heart$HeartDisease=="1"]
+
+```
+
+Como hipotesis nula, se quiere saber si las enfermades cardíacas es igual en hombres que en mujeres.
+<br>
+Como hipotesis alternativa se quiere saber si las enfermades cardíacas es mayor en hombres que en mujeres.
+
+$$
+\left\{
+\begin{array}{ll}
+H_{0}: &  \mu_H=\mu_M \\
+H_{1}: & \mu_H>\mu_M
+\end{array}
+\right.\\
+\ Hipótesis\ unilateral
+$$
+
+Por el teorema del límite central, asumimos normalidad ya que tenemos una muestra con n>30. Esto, es un contraste de hipótesis de dos muestras independientes sobre la media (varianzas desconocidas).
+Es un test unilateral por la derecha.
+<br>
+
+Ahora, comprobamos la homocesdasticidad.
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+var.test(carHom,carMuj)
+
+```
+Se observa que p-value > 0.05. Por tanto, las varianzas son iguales.
+<br>
+
+A continuación, aplicamos el test de este contraste de hipótesis.
+
+```{r,eval=TRUE,echo=TRUE}
+
+t.test( carHom,carMuj , var.equal=TRUE, alternative = "greater")
+
+```
+
+Se aprecia, que p-value > 0.05. Por tanto, se acepta la hipótesis nula de que los hombres con enfermedad cardíaca tienen igual azucar en sangre que las mujeres con enfermedad cardíaca.
