@@ -584,3 +584,80 @@ if (!require('corrplot')) install.packages('corrplot'); library('corrplot')
 corrplot(Corelacion, method = "number")
 
 ```
+A partir de aqui, podemos observar lo siguiente: 
+<br>
+<li>Las variables HeartDisease y ST_Slope tienen una correlación moderada directa (0.56). </li>
+<li>Las variables Oldpeak y ST_Slope tienen una correlación moderada directa (0.50). </li>
+<li> Las variables MaxHR y HeartDisease tienen una correlación débil directa (0.40). </li>
+
+## Regresión lineal
+
+### Regresión lineal simple
+
+
+Se calcula un modelo de regresión lineal simple cuya variable dependiente es MaxHR y independiente es Age.
+```{r,eval=TRUE,echo=TRUE}
+
+Model_reg_sim <- lm(MaxHR~Age,data=heart)
+summary(Model_reg_sim)
+
+```
+
+Se observa que el coeficiente de determianción ajustado es bajo: 14.6%.
+
+### Regresión lineal múltiple
+
+Se crea un modelo de regresión lineal múltiple con la variable dependiente MaxHR y indpendientes:HeartDisease, ST_Slope, FastingBS, Oldpeak, RestingECG, Sex, Cholesterol.
+```{r,eval=TRUE,echo=TRUE}
+
+Model_reg_mul <- lm(MaxHR~Age+HeartDisease+ST_Slope+FastingBS+Oldpeak+RestingECG+Sex+Cholesterol,data=heart)
+summary(Model_reg_mul)
+
+```
+Se aprecia un coeficiente de determinación bajo (30%).
+
+## Regresión logística
+
+### Regresión logística simple
+
+Vamos a crear una regresión logística simple como variable dependiente HeartDisease y indpendiente MaxHR.
+
+```{r,eval=TRUE,echo=TRUE}
+
+model_logis1 <- glm(formula=HeartDisease~MaxHR,data=heart,family=binomial())
+summary(model_logis1)
+
+```
+
+Calculamos la bondad de ajuste usando el test de hoslem.
+
+```{r,eval=TRUE,echo=TRUE}
+
+if (!require('ResourceSelection')) install.packages('ResourceSelection'); library('ResourceSelection')
+
+hoslem.test(heart$HeartDisease,fitted(model_logis1))
+
+```
+
+Se observa que p-value >0.05. Por tanto, el modelo ajusta bien los datos.
+
+### Regresión logística múltiple
+
+Calculamos una regresión lineal múltiple con HeartDisease como variable dependiente y ST_Slope, Oldpeak, MaxHR, ChestPainType, RestingBP, Age_nor como variables dependientes
+
+```{r,eval=TRUE,echo=TRUE}
+
+model_logis2 <- glm(formula=HeartDisease~ST_Slope+Oldpeak+MaxHR+ChestPainType+RestingBP+Age_nor,data=heart,family=binomial())
+summary(model_logis2)
+
+```
+Se aprecia que el AIC es mucho menor y por tanto, el modelo es mejor.
+<br>
+Calculamos la bondad de ajuste:
+
+```{r,eval=TRUE,echo=TRUE}
+
+hoslem.test(heart$HeartDisease,fitted(model_logis2))
+
+```
+Se aprecia que el modelo tiene p-value > 0.05. Por tanto, ajusta bien los datos.
