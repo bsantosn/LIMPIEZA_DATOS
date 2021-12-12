@@ -550,3 +550,37 @@ t.test( carHom,carMuj , var.equal=TRUE, alternative = "greater")
 ```
 
 Se aprecia, que p-value > 0.05. Por tanto, se acepta la hipótesis nula de que los hombres con enfermedad cardíaca tienen igual azucar en sangre que las mujeres con enfermedad cardíaca.
+
+## Estudio de correlación entre las variables
+
+En este apartado, representaremos la matriz de correlación del dataset.
+<br>
+Pasamos todsas las variables a numéricas en un dataset nuevo.
+```{r,eval=TRUE,echo=TRUE}
+
+heart_num <-heart[1:12]
+heart_num$Sex <- as.numeric(heart_num$Sex)
+heart_num$ChestPainType <- as.numeric(heart_num$ChestPainType)
+heart_num$RestingECG <- as.numeric(heart_num$RestingECG)
+heart_num$ExerciseAngina <- as.numeric(heart_num$ExerciseAngina)
+heart_num$ST_Slope <- as.numeric(heart_num$ST_Slope)
+
+```
+
+<br>
+Calculamos la correlación de las variables usando el método de pearson.
+
+```{r,eval=TRUE,echo=TRUE}
+
+Corelacion <- cor(heart_num)
+Corelacion
+
+```
+
+A continuación, representamos la matriz de correlación.
+
+```{r,eval=TRUE,echo=TRUE}
+if (!require('corrplot')) install.packages('corrplot'); library('corrplot')
+corrplot(Corelacion, method = "number")
+
+```
