@@ -75,7 +75,7 @@ A partir de esto, se puede concluir con que hay 12 variables y 918 observaciones
 
 # Preprocesado de datos
 
-## Conersión y estandarización
+## Conversión y estandarización
 
 Pasamos los valores int a numeric y los char a factor.
 
@@ -664,3 +664,160 @@ hoslem.test(heart$HeartDisease,fitted(model_logis2))
 
 ```
 Se aprecia que el modelo tiene p-value > 0.05. Por tanto, ajusta bien los datos.
+
+## modelos de clasificación
+
+```{r,eval=TRUE,echo=TRUE}
+
+head(heart)
+
+```
+### Preparación de los datos para el modelo
+
+Nos interesa desordenar los datos para poder elegir registros aleatorios. Guardaremos los datos con el nuevo nombre de: heart_clasification
+
+```{r,eval=TRUE,echo=TRUE}
+
+set.seed(1)
+heart_clasification <- heart[sample(nrow(heart)),]
+
+```
+
+Para la futura evaluación del árbol de decisión, es necesario dividir el conjunto de datos en un conjunto de entrenamiento y un conjunto de prueba. El conjunto de entrenamiento es el subconjunto del conjunto original de datos utilizado para construir un primer modelo; y el conjunto de prueba, el subconjunto del conjunto original de datos utilizado para evaluar la calidad del modelo.
+
+Lo más correcto será utilizar un conjunto de datos diferente del que utilizamos para construir el árbol, es decir, un conjunto diferente del de entrenamiento. No hay ninguna proporción fijada con respecto al número relativo de componentes de cada subconjunto, pero la más utilizada acostumbra a ser 2/3 para el conjunto de entrenamiento y 1/3, para el conjunto de prueba.
+
+La variable por la que clasificaremos es HeartDisease, para clasificar si existe riesgo de enfermedad cardíaca o no, y que se sitúa en nuestro en la columna, la 16. De esta forma, tendremos un conjunto de datos para el entrenamiento y uno para la validación
+
+```{r,eval=TRUE,echo=TRUE}
+
+set.seed(666)
+y <- heart_clasification[,12] 
+X <- heart_clasification[,1:11] 
+
+```
+
+Dividimos el dataset en dos partes diferenciadas, train y test. Podemos crear directamente un rango utilizando el parámetro split_prop
+
+```{r,eval=TRUE,echo=TRUE}
+
+split_prop <- 3 
+indexes = sample(1:nrow( heart_clasification), size=floor(((split_prop-1)/split_prop)*nrow(heart_clasification)))
+trainx<-X[indexes,]
+trainy<-y[indexes]
+testx<-X[-indexes,]
+testy<-y[-indexes]
+
+```
+
+
+### Creación del modelo, calidad del modelo y extracción de reglas
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+if(!require(ggplot2)){
+    install.packages('ggplot2', repos='http://cran.us.r-project.org')
+    library(ggplot2)
+}
+if(!require(ggpubr)){
+    install.packages('ggpubr', repos='http://cran.us.r-project.org')
+    library(ggpubr)
+}
+if(!require(grid)){
+    install.packages('grid', repos='http://cran.us.r-project.org')
+    library(grid)
+}
+
+if(!require(gridExtra)){
+    install.packages('gridExtra', repos='http://cran.us.r-project.org')
+    library(gridExtra)
+}
+
+if(!require(C50)){
+    install.packages('C50', repos='http://cran.us.r-project.org')
+    library(C50)
+}
+
+library("rpart")       
+library("rpart.plot")  
+
+```
+
+
+Se crea el árbol de decisión usando los datos de entrenamiento:
+
+Utilizaremos dos bibliotecas diferentes, una de ellas es rpart, para crear el árbol de decisión y rpart.plot para representar visualmente nuestro árbol de decisión.
+
+```{r,eval=TRUE,echo=TRUE}
+
+modelo_clasificacion_rpart <- rpart(formula = trainy ~ ., data = trainx, method = "class" )
+
+```
+
+```{r,eval=TRUE,echo=TRUE}
+
+summary(modelo_clasificacion_rpart)
+
+```
+
+Vamos a representar gráficamente el arbol obtenido de dos maneras diferentes:
+
+```{r,eval=TRUE,echo=TRUE}
+
+rpart.plot(modelo_clasificacion_rpart, type=2,extra = 2, under = TRUE, faclen=5,cex=.55) 
+rpart.plot(modelo_clasificacion_rpart, type=2,extra = 8, under = TRUE, faclen=5,cex=.55) 
+
+```
+
+En el primer árbol Observamos las tasas de clasificación para cada nodo, expresada como el número de clasificaciones correctas y el número de observaciones en el nodo. En el segundo gráfico observamos la probabilidad por cada clase.
+
+
+### Predición del modelo
+
+```{r,eval=TRUE,echo=TRUE}
+
+predicted_model <- predict( modelo_clasificacion_rpart, testx, type="class" )
+print(sprintf("La precisión del modelo4 es: %.4f %%",100*sum(predicted_model == testy) / length(predicted_model)))
+
+```
+
+Vamos a crear la matriz de confusión
+
+```{r,eval=TRUE,echo=TRUE}
+
+mat_conf<-table(testy,Predicted=predicted_model)
+mat_conf
+
+```
+
+```{r,eval=TRUE,echo=TRUE}
+if(!require(gmodels)){
+    install.packages('gmodels', repos='http://cran.us.r-project.org')
+    library(gmodels)
+}
+
+CrossTable(testy, predicted_model,prop.chisq  = FALSE, prop.c = FALSE, prop.r =FALSE,dnn = c('Reality', 'Prediction'))
+
+```
+añadir: DISCRETIZAR MÁS VARIABLES, ORDENAR VARIABLES SEGÚN EL ANÁLISIS PCA, REALIZAR BOOSTING, OBTENER REGLAS DEL MODELO C50
+
+```{r,eval=TRUE,echo=TRUE}
+if(!require(C50)){
+    install.packages('C50', repos='http://cran.us.r-project.org')
+    library(C50)
+}
+trainy = as.factor(trainy)
+modelo_clasificacion_C50 <- C50::C5.0(trainx, trainy,rules=TRUE,control = C5.0Control(noGlobalPruning = FALSE) )
+summary(modelo_clasificacion_C50)
+
+```
+
+Explicar reglas:
+
+
+```{r,eval=TRUE,echo=TRUE}
+predicted_model <- predict( modelo_clasificacion_C50, testx, type="class" )
+print(sprintf("La precisión del modelo es: %.4f %%",100*sum(predicted_model == testy) / length(predicted_model)))
+
+```
