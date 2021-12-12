@@ -342,6 +342,7 @@ qqnorm(heart$Age)
 qqline(heart$Age)
 
 ```
+
 A simple vista, se puede ver que los datos están por la recta menos por los lados y podríamos asumir normalidad. De todas formas comprobaremos esto con el test de shapiro y Lilliefors.
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -405,7 +406,7 @@ lillie.test(heart$MaxHR)
 
 ```
 
-Según el test de shapiro, podemos afirmar que la variable MaxHR, pero según el test de lillie no.
+Según ambos test, la variable MaxHR no sigue una distribución normal.
 
 __Oldpeak__
 
@@ -572,7 +573,7 @@ Calculamos la correlación de las variables usando el método de pearson.
 
 ```{r,eval=TRUE,echo=TRUE}
 
-Corelacion <- cor(heart_num)
+Corelacion <- cor(heart_num,method="pearson")
 Corelacion
 
 ```
@@ -584,6 +585,7 @@ if (!require('corrplot')) install.packages('corrplot'); library('corrplot')
 corrplot(Corelacion, method = "number")
 
 ```
+
 A partir de aqui, podemos observar lo siguiente: 
 <br>
 <li>Las variables HeartDisease y ST_Slope tienen una correlación moderada directa (0.56). </li>
@@ -614,6 +616,7 @@ Model_reg_mul <- lm(MaxHR~Age+HeartDisease+ST_Slope+FastingBS+Oldpeak+RestingECG
 summary(Model_reg_mul)
 
 ```
+
 Se aprecia un coeficiente de determinación bajo (30%).
 
 ## Regresión logística
@@ -643,7 +646,7 @@ Se observa que p-value >0.05. Por tanto, el modelo ajusta bien los datos.
 
 ### Regresión logística múltiple
 
-Calculamos una regresión lineal múltiple con HeartDisease como variable dependiente y ST_Slope, Oldpeak, MaxHR, ChestPainType, RestingBP, Age_nor como variables dependientes
+Calculamos una regresión logística múltiple con HeartDisease como variable dependiente y ST_Slope, Oldpeak, MaxHR, ChestPainType, RestingBP, Age_nor como variables dependientes
 
 ```{r,eval=TRUE,echo=TRUE}
 
