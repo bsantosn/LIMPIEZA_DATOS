@@ -12,6 +12,20 @@ output:
 ---
 
 ******
+
+# Detalles de la actividad
+
+## Descripción
+Rellenar
+
+## Objetivos
+
+Rellenar
+
+## Competencias
+
+Rellenar
+
 #  Introducción
 
 ## Elección del DataSet
@@ -22,7 +36,7 @@ El conjunto de datos que hemos elegido está en la siguiente url: https://www.ka
 
 
 ******
-# Carga del dataset
+## Carga del dataset
 
 ******
 
@@ -71,7 +85,7 @@ A partir de esto, se puede concluir con que hay 12 variables y 918 observaciones
 <li> Variables de tipo carácter: Sex, ChestPainType, RestingECG, ExerciseAngina, ST_Slope. </li>
 <li> Variables de tipo entero: Age, RestingBP, Cholesterol, FastingBS, MaxHR, HeartDisease. </li>
 
-
+## Importancia y objetivos de los análisis
 
 # Preprocesado de datos
 
@@ -665,7 +679,7 @@ hoslem.test(heart$HeartDisease,fitted(model_logis2))
 ```
 Se aprecia que el modelo tiene p-value > 0.05. Por tanto, ajusta bien los datos.
 
-## modelos de clasificación
+## Modelos de clasificación
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -821,3 +835,74 @@ predicted_model <- predict( modelo_clasificacion_C50, testx, type="class" )
 print(sprintf("La precisión del modelo es: %.4f %%",100*sum(predicted_model == testy) / length(predicted_model)))
 
 ```
+
+# Visualización
+
+Vamos a realizar diferentes estudios gráficos para analizar las distintas variables del modelo y las relaciones entre ellas.
+
+Para ello, diferenciaremos entre los tipos de variables continuas y discretas para su análisis y sí fuera necesario transformaremos las variables para su estudio más eficiente. 
+
+```{r,eval=TRUE,echo=TRUE}
+head(heart)
+```
+
+Variables discretas:
+
+```{r}
+library(ggplot2)
+ggplot(data=heart,aes(x=Age_dist,fill=(factor(HeartDisease))))+geom_bar() + ggtitle("Enfermedad Cardiaca por grupo de edad(G1)") + labs(x="Edad", colour= "HeartDisease") 
+
+
+ggplot(data=heart,aes(x=Sex,fill=factor(HeartDisease)))+geom_bar() + ggtitle("Enfermedad Cardiaca por sexo(G2)") + labs(x="sexo", colour= "HeartDisease") 
+
+
+ggplot(data=heart,aes(x=ChestPainType,fill=factor(HeartDisease)))+geom_bar() + ggtitle("Enfermedad Cardiaca por ChestPainType(G3)") + labs(x="ChestPainType", colour= "HeartDisease") 
+
+
+ggplot(data=heart,aes(x=RestingECG,fill=factor(HeartDisease)))+geom_bar() + ggtitle("Enfermedad Cardiaca por RestingECG(G4)") + labs(x="RestingECG", colour= "HeartDisease") 
+
+# ExerciseAngina & HeartDisease
+ggplot(data=heart,aes(x=ExerciseAngina,fill=factor(HeartDisease)))+geom_bar() + ggtitle("Enfermedad Cardiaca por ExerciseAngina(G5)") + labs(x="ExerciseAngina", colour= "HeartDisease") 
+
+# ST_Slope & HeartDisease
+ggplot(data=heart,aes(x=ST_Slope,fill=factor(HeartDisease)))+geom_bar() + ggtitle("Enfermedad Cardiaca por ST_Slope(G6)") + labs(x="ST_Slope", colour= "HeartDisease") 
+
+# FastingBS & HeartDisease
+ggplot(data=heart,aes(x=FastingBS,fill=factor(HeartDisease)))+geom_bar() + ggtitle("Enfermedad Cardiaca por FastingBS(G7)") + labs(x="FastingBS", colour= "HeartDisease") 
+
+```
+
+Variables continuas:
+
+EStudiamos la relación entre la variable edad y colesterol, ya que hemos estudiado su relación anteriormente. 
+
+```{r}
+# Coresterol & Sexo
+ggplot(heart, aes(x =heart$Age, y = heart$Cholesterol)) + geom_point()+
+  geom_smooth(method = "loess") 
+```
+Estudiamos el resto de variables continuas, en relación con su edad y el riesgo o no de sufrir una enfermedad cardíaca:
+
+```{r}
+ggplot(heart, aes(RestingBP, Age, colour = HeartDisease)) + 
+  geom_point()+ ggtitle("AÑADIR TITULO GRÁFICO") 
+
+ggplot(heart, aes(Cholesterol, Age, colour = HeartDisease)) + 
+  geom_point()+ ggtitle("AÑADIR TITULO GRÁFICO") 
+
+ggplot(heart, aes(MaxHR, Age, colour = HeartDisease)) + 
+  geom_point() + ggtitle("AÑADIR TITULO GRÁFICO") 
+
+ggplot(heart, aes(Oldpeak, Age, colour = HeartDisease)) + 
+  geom_point() + ggtitle("AÑADIR TITULO GRÁFICO") 
+
+```
+
+COMENTAR CONCLUSIONES DE CADA GRÁFICO y añadir más gráficos si fuera necesario
+
+# Conclusiones
+
+añadir
+# Recursos
+
+añadir
