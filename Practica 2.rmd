@@ -313,6 +313,8 @@ max(heart$Age_nor)
 
 ```
 
+Se normaliza esta variable para acotar los datos en un intervalo más pequeño ya que puede haber edades dispares y también para poder ver si esta variable puede llegar a seguir una distribución normal.
+
 ## Discretización de variables
 
 En esta apartado, también usaremos la variable "Age" para discretizarla en diferentes rangos y se añadirá al dataset con el nombre Age_dis.
@@ -325,6 +327,7 @@ heart <- cbind(heart,Age_dist)
 
 ```
 
+Se discretiza esta variable para dividir la edad en rangos y mediante gráficos, poder ver comos e distribuye las características de enfermedades de corazón en función de la edad.
 
 
 # Análisis de los datos
@@ -490,7 +493,10 @@ H_{1}: & \mu_M>\mu_H
 \right.\\
 \ Hipótesis\ unilateral
 $$
-Por el teorema del límite central, asumimos normalidad ya que tenemos una muestra con n>30. Esto, es un contraste de hipótesis de dos muestras independientes sobre la media (varianzas desconocidas).
+Por el teorema del límite central, podemos asumir normalidad, puesto que tenemos una muestra de
+tamaño grande n y se desea realizar un test sobre la media. Por tanto, aplicamos un test de
+hipótesis de dos muestras sobre la media. Aplicaremos la distribución t, dado que no se conoce la
+varianza de la población.
 Es un test unilateral por la derecha.
 <br>
 
@@ -505,7 +511,35 @@ var.test(colMuj, colHom)
 Se observa que p-value < 0.05. Por tanto, las varianzas no son iguales.
 <br>
 
-A continuación, aplicamos el test de este contraste de hipótesis.
+Calculamos manualmente este constraste:
+
+```{r,eval=TRUE,echo=TRUE}
+
+alfa <- 1-0.95
+
+n1 <- length(colMuj)
+n2 <- length(colHom)
+s1 <- sd(colMuj)
+s2 <- sd(colHom) 
+
+mean1 <- mean(colMuj)
+mean2 <- mean(colHom)
+tobs <- (mean1-mean2) / (sqrt(s1^2/n1 + s2^2/n2))
+
+df <- ((s1^2/n1 + s2^2/n2)^2) / ((s1^2/n1)^2/(n1-1) + (s2^2/n2)^2/(n2-1))
+
+tcritU <- qt(alfa,df,lower.tail = FALSE) 
+
+pvalue <-pt( tobs,df, lower.tail=FALSE)
+
+paste("Estadistico de contraste: ",tobs)
+paste("Valor crítico: ",tcritU)
+paste("Valor p: ",pvalue)
+paste("Valor de df: ",df)
+
+```
+
+A continuación, aplicamos el test de este contraste de hipótesis para comprobar que nos da lo mismo.
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -541,7 +575,10 @@ H_{1}: & \mu_H>\mu_M
 \ Hipótesis\ unilateral
 $$
 
-Por el teorema del límite central, asumimos normalidad ya que tenemos una muestra con n>30. Esto, es un contraste de hipótesis de dos muestras independientes sobre la media (varianzas desconocidas).
+Por el teorema del límite central, podemos asumir normalidad, puesto que tenemos una muestra de
+tamaño grande n y se desea realizar un test sobre la media. Por tanto, aplicamos un test de
+hipótesis de dos muestras sobre la media. Aplicaremos la distribución t, dado que no se conoce la
+varianza de la población.
 Es un test unilateral por la derecha.
 <br>
 
@@ -560,7 +597,41 @@ A continuación, aplicamos el test de este contraste de hipótesis.
 
 ```{r,eval=TRUE,echo=TRUE}
 
-t.test( carHom,carMuj , var.equal=TRUE, alternative = "greater")
+alfa <- 1-0.95
+
+n1 <- length(carHom)
+n2 <- length(carMuj)
+s1 <- sd(carHom)
+s2 <- sd(carMuj) 
+
+mean1 <- mean(carHom)
+mean2 <- mean(carMuj)
+
+
+df <- ((s1^2/n1 + s2^2/n2)^2) / ((s1^2/n1)^2/(n1-1) + (s2^2/n2)^2/(n2-1))
+
+ S <- sqrt( ( (n1-1)*s1^2 + (n2-1)*s2^2 ) / (n1+n2-2) )
+
+ tobs <- (mean1-mean2) / (S * sqrt(1/n1 + 1/n2))
+ tcritL <- qt( alfa/2, n1+n2-2)
+ tcritU <- qt( 1-alfa/2, n1+n2-2)
+ pvalue <-pt( abs(tobs), df=n1+n2-2, lower.tail=FALSE)
+
+
+paste("Estadistico de contraste: ",tobs)
+paste("Valor crítico: ",tcritU)
+paste("Valor p: ",pvalue)
+paste("Valor de df: ",df)
+
+
+
+```
+
+Aplicamos el test para comprobar si nos da el mismo resultado.
+
+```{r,eval=TRUE,echo=TRUE}
+
+t.test( carHom,carMuj , var.equal=FALSE, alternative = "greater")
 
 ```
 
