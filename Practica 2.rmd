@@ -293,6 +293,86 @@ colSums(is.na(heart))
 ```
 
 
+## PCA: Análisis de componentes principales
+
+Con el PCA lo que se busca es reducir la dimensionalidad. Partimos de una serie de atributos numéricos del dataset “heart.csv” correlacionados y eso lo convertiremos en menos variables sin estar relacionadas entre si, pero queriendo mantener la mayor información posible.
+<br>
+En el dataset "heart.csv", no todos los atributos son numéricos. Por tanto, los convertiremos y lo añadiremos en otro dataset.
+
+```{r,eval=TRUE,echo=TRUE}
+
+heart_num <- heart
+heart_num$Sex <- with(heart_num, ifelse(Sex == "M", 0,1))
+heart_num$ChestPainType <- with(heart_num, ifelse(ChestPainType == "ASY",0,ifelse(ChestPainType == "ATA",1,ifelse(ChestPainType == "NAP",2,3))))
+heart_num$RestingECG <- with(heart_num, ifelse(RestingECG == "LVH",0,ifelse(RestingECG == "Normal",1,2)))
+heart_num$ExerciseAngina <- with(heart_num, ifelse(ExerciseAngina == "N", 0,1))
+heart_num$ST_Slope <- with(heart_num, ifelse(ST_Slope == "Down", 0,ifelse(ST_Slope == "Flat",1,2)))
+
+```
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+ pca = prcomp(heart_num, scale = TRUE)
+
+  plot(pca, type="l")
+
+```
+
+En la gráfica se observa cuales son los componentes principales más significativos o con más “peso”. Estos son el PC1 y PC2.
+Se muestra un resumen de cada uno de los componentes principales.
+
+```{r,eval=TRUE,echo=TRUE}
+
+summary(pca)
+
+```
+
+Visto la información que da “Proportion of Variance”, el PC1 y PC2 nos dá el 38.07% de la información del dataset.
+<br>
+
+La línea roja indica el valor medio de contribución. Podemos decir que aquellas variables superiores a esta linea son importantes a la hora de contribuir a este componente.
+
+```{r,eval=TRUE,echo=TRUE}
+library("factoextra")
+
+fviz_contrib(pca, addlabels = TRUE, choice = "var", axes = 1, top = 20)
+
+```
+
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+
+library("factoextra")
+
+fviz_pca_var(pca,
+             col.var = "contrib", # color en funcón de la contribución. 
+             gradient.cols = c("#00AFBB", "#E7B800", "#FC4E07"),
+             repel = TRUE    
+             )
+
+
+```
+
+Viendo esto, se puede ver como el PC1 le asigna más peso a la variable “HeartDisease” que se mueve por el eje X.
+Por otro lado, vemos como el PC2 le asigna más peso a la variable “RestingECG” que se mueve por el eje Y.
+
+
+<br>
+
+Se muestra otro gráfico para que la información quede más clara.
+
+```{r,eval=TRUE,echo=TRUE}
+
+biplot(pca, scale = 0, cex = 0.5, col = c("lightblue", "red"))
+
+```
+
+Se aprecia como la información es bastante dispar entre los diferentes componentes PC1 y PC2. Por lo tanto, decidimos no eliminar ningún campo del dataset ya que podemos considerar que cada uno nos puede dar cierta importancia.
+
+
 ## Normalización 
 
 En este apartado, lo que vamos a hacer es normalizar el campo Age usando min-max. Se creará un nuevo campo llamado Age_nor y se añadirá al dataset.
@@ -328,6 +408,7 @@ heart <- cbind(heart,Age_dist)
 ```
 
 Se discretiza esta variable para dividir la edad en rangos y mediante gráficos, poder ver comos e distribuye las características de enfermedades de corazón en función de la edad.
+
 
 
 # Análisis de los datos
@@ -799,6 +880,7 @@ testy<-y[-indexes]
 ### Creación del modelo, calidad del modelo y extracción de reglas
 
 
+
 ```{r,eval=TRUE,echo=TRUE}
 
 if(!require(ggplot2)){
@@ -830,6 +912,45 @@ library("rpart.plot")
 ```
 
 
+```{r,eval=TRUE,echo=TRUE}
+if(!require(C50)){
+    install.packages('C50', repos='http://cran.us.r-project.org')
+    library(C50)
+}
+trainy = as.factor(trainy)
+modelo_clasificacion_C50 <- C50::C5.0(trainx, trainy,rules=TRUE,control = C5.0Control(noGlobalPruning = FALSE) )
+summary(modelo_clasificacion_C50)
+
+```
+
+Se observa que los atributos que más se usan en este modelo son “ST_Slope” con un 100% y “ChestPainType” con un 48.69%. El modelo obtenido se ha clasificado con un 8.0% de errores, lo que se supone que hay un 92% de aciertos.
+
+Además, se han obtenido una serie de reglas que el modelo ha acogido como decisivas para observar si una persona tiene riesgo de enfermedad del corazón. Todas estas se explican a continuación:
+
+1. Si una persona es de género femenino, tiene una presión arterial menor o igual que 148, un azúcar en sangre menor o igual a 0 y no tiene angina inducida por el ejercicio, no tendrá enfermedad del corazón con un 97.5%.
+2. Una persona con dolor de pecho NAP, una presión arterial menor o igual que 132, una máxima frecuencia cardíaca de 150, tendrá una probabilidad de no tener enfermedad del corazón con un 90.5%.
+3. Con una probabilidad del 87.8%, una persona con dolor de pecho ATA/TA y una máxima frecuencia cardíaca mayor que 150, no tednrá una enfermedad cardíaca.
+4. Una persona cuyo ST_Slope es Up, no tendrá una enfermedad del corazón con un 82.8%.
+5. Una persona con dolor de epcho ASY, una presióna rterial menor o igual que 131, azúcar en sangre mayor que 0, tendrá una enfermedad cardíaca con una probabilidad de 98.1%.
+6. Con una probabilidad del 96%, una persona con dolor de pecho ASY, el colesterol menor o igual a 197 y con angina inducida por el ejercicio, tendrá una enfermedad del corazón.
+7. Una persona con dolor de pecho ASY, azúcar en sangre mayor que 0 y un Oldpeak de 0.6, tendrá enfermedad del corazon con un 95.2%.
+8. Con una probabilidad del 94.8%, un hombre con dolor de pecho  ASY, colesterol mayor que 227, azúcar en sangre menor o igual a 0, con dolor de angina inducida por el ejercicio, tendrá enfermedad del corazón.
+9. Un hombre con Oldpeak menor o igual a 0.3 y con ST_Slope down/flat, tendrá una enfermedad del corazón con un 93.9%.
+10. Un hombre con dolor de pecho ASY, azúcar en sangre menor o igual a 126, una máxima frecuencia cardíaca entre 146-160 y un ST_Slope Up, tendrá una enfermedad cardíaca con un 90.9%.
+11. Una persona con dolor de pecho ASY , azúcar en sangre menor o igual a 126, sin dolor de angina inducida por el ejercicio, con  Oldpeak mayor que  0.4 y ST_Slope  Up, tendrá enfermedad del corazón con un 90%.
+12. Una persona con ST_Slope down/flat, tendrá una enfermedad cardíaca con un 80.1%.
+
+Viendo todo esto, se puede decir que  una persona que no tiene dolor de angina inducida por el ejercicio, con azúcar en sangre menor o igual a 0 y una presión arterial menor o igual a 148, no tenderá a tener enfermedades cardíacas.
+
+
+```{r,eval=TRUE,echo=TRUE}
+predicted_model <- predict( modelo_clasificacion_C50, testx, type="class" )
+print(sprintf("La precisión del modelo es: %.4f %%",100*sum(predicted_model == testy) / length(predicted_model)))
+
+```
+
+### Arbol de decisión con el método rpart
+
 Se crea el árbol de decisión usando los datos de entrenamiento:
 
 Utilizaremos dos bibliotecas diferentes, una de ellas es rpart, para crear el árbol de decisión y rpart.plot para representar visualmente nuestro árbol de decisión.
@@ -858,7 +979,7 @@ rpart.plot(modelo_clasificacion_rpart, type=2,extra = 8, under = TRUE, faclen=5,
 En el primer árbol Observamos las tasas de clasificación para cada nodo, expresada como el número de clasificaciones correctas y el número de observaciones en el nodo. En el segundo gráfico observamos la probabilidad por cada clase.
 
 
-### Predición del modelo
+#### Predición del modelo
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -885,27 +1006,51 @@ if(!require(gmodels)){
 CrossTable(testy, predicted_model,prop.chisq  = FALSE, prop.c = FALSE, prop.r =FALSE,dnn = c('Reality', 'Prediction'))
 
 ```
-añadir: DISCRETIZAR MÁS VARIABLES, ORDENAR VARIABLES SEGÚN EL ANÁLISIS PCA, REALIZAR BOOSTING, OBTENER REGLAS DEL MODELO C50
 
-```{r,eval=TRUE,echo=TRUE}
-if(!require(C50)){
-    install.packages('C50', repos='http://cran.us.r-project.org')
-    library(C50)
-}
-trainy = as.factor(trainy)
-modelo_clasificacion_C50 <- C50::C5.0(trainx, trainy,rules=TRUE,control = C5.0Control(noGlobalPruning = FALSE) )
-summary(modelo_clasificacion_C50)
+Se aprecia que el verdadero positivo  es 32% frente a un 0.62% de falsos positivos. Por lo tanto, tiene una alta sensibilidad.
+<br>
+Por otro lado, se observa que los verdaderos negativos es 51.6% frente a un 10.1% de falsos negativos, entonces se puede decir que tiene una alta especificidad.
 
-```
+### Modelo con mejora adaptative boosting
 
-Explicar reglas:
+
+A continuación, utilizamos otro enfoque para comparar los resultados: incorporar como novedad “adaptative boosting” . La idea de esta técnica es generar varios clasificadores, con sus correspondientes arboles de decisión y su ser de reglas. Cuando un nuevo caso va a ser clasificado, cada clasificador vota cual es la clase predicha. Los votos son sumados y determina la clase final.
 
 
 ```{r,eval=TRUE,echo=TRUE}
-predicted_model <- predict( modelo_clasificacion_C50, testx, type="class" )
-print(sprintf("La precisión del modelo es: %.4f %%",100*sum(predicted_model == testy) / length(predicted_model)))
+
+modelo_trials <- C50::C5.0(trainx, trainy, trials = 10, rules = TRUE)
 
 ```
+
+Ahora, calculamos la precisón del modelo a partir de la matriz de confianza.
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+predicted_model <- predict( modelo_trials, testx, type="class" )
+mat_conf<-table(testy,Predicted=predicted_model)
+
+porcentaje_correct<-100 * sum(diag(mat_conf)) / sum(mat_conf)
+print(sprintf("El %% de registros correctamente clasificados es: %.4f %%",porcentaje_correct))
+
+```
+
+Se aprecia que la precisión con trials es 83.33% que es mejor que sin trials que era 85.29%.
+
+Finalmente, se crea la matriz de confusión:
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+CrossTable(testy, predicted_model,prop.chisq  = FALSE, prop.c = FALSE, prop.r =FALSE,dnn = c('Reality', 'Prediction'))
+
+```
+
+Se aprecia que el verdadero positivo es 32.4% frente a un 0.59% de falsos positivos. Por lo tanto, tiene una alta sensibilidad. 
+Por otro lado, se observa que los verdaderos negativos es 51% frente a un 10.8% de falsos negativos, entonces se puede decir que tiene una alta especificidad.
+
+
 
 # Visualización
 
