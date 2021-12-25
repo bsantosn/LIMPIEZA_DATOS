@@ -16,11 +16,18 @@ output:
 # Detalles de la actividad
 
 ## Descripción
-Rellenar
+
+Este proyecto corresponde a la asignatura de Tipología y ciclo de vida de los datos del máster oficial de Ciencia de de datos de la Universidad Oberta de Cataluña UOC. En el pretendemos afianzar todos los conceptos estudiados en la segunda parte de la asignatura, limpieza y análisis de los datos. Para ello, en primer lugar deberemos elegir un dataset donde a través de la información recogida seamos capaces de llevar a cabo los análisis estudiados en la asignatura, así cómo obtener unas conclusiones de los análisis interesantes. 
+
+Para ello y después de análizar los distintos dataset disponibles en la plataforma kaggle, hemos optado por el conjunto de datos disponible en el siguiente enlace: https://www.kaggle.com/fedesoriano/heart-failure-prediction.
 
 ## Objetivos
 
-Rellenar
+Como hemos comentado anteriormente, el objetivo de esta práctica es afianzar los conceptos teóricos vistos en la asignatura a la vez que obtenemos información relevante y análisis 
+de aquellas variables que afectan al riesgo de padecer enfermedades cardíacas. 
+
+En concreto, llevaremos a cabo los distintas técnicas para responder a las siguientes preguntas:
+
 
 ## Competencias
 
@@ -49,6 +56,7 @@ heart <- read.csv("heart.csv",sep=",")
 
 
 ## Explicación de las variables
+
 A continuación, obtenemos el listado de variables:
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -71,6 +79,32 @@ str(heart)
 <li> __HeartDisease__   : clase de salida. </li>
 
 <br>
+
+Vamos a realizar una explicación más extensa de cada variable según los criterios médicos para conocer estos conceptos y su influencia respecto a la hora de sufrir una enfermedad cardíaca.
+
+
+**Age** : La edad es el factor de riesgo más importante en el desarrollo de enfermedades cardiovasculares o cardíacas, según la SEC, con aproximadamente un triple de riesgo con cada década de vida. Las vetas de grasa coronarias pueden comenzar a formarse en la adolescencia. Se estima que el 82 por ciento de las personas que mueren de enfermedad coronaria tienen 65 años o más. Simultáneamente, el riesgo de accidente cerebrovascular se duplica cada década después de los 55 años.
+
+**Sex**: Los hombres tienen un mayor riesgo de enfermedad cardíaca que las mujeres premenopáusicas. Una vez pasada la menopausia, se ha argumentado que el riesgo de una mujer es similar al del hombre, aunque datos más recientes de la OMS y la ONU lo niegan. Si una mujer tiene diabetes, tiene más probabilidades de desarrollar una enfermedad cardíaca que un hombre con diabetes.
+
+**ChestPainType**: la angina o dolor de pecho es un malestar que se produce cuando el músculo cardíaco no recibe suficiente sangre rica en oxígeno.
+
+**RestingBP**: la presión arterial alta puede dañar las arterias que alimentan el corazón. La presión arterial alta puede ocurrir debido a distintas afecciones, como la obesidad, el colesterol alto o la diabetes.
+
+**Cholesterol**: Un nivel alto de colesterol unido a lipoproteínas de baja densidad (LDL) (el colesterol “malo”) ayuda a que las arterias se estrechen. Un nivel alto de triglicéridos, un tipo de grasa en la sangre, también aumenta el riesgo de un ataque cardíaco. Sin embargo, un nivel alto de colesterol de lipoproteínas de alta densidad (HDL) (el colesterol “bueno”) reduce el riesgo de sufrir un ataque cardíaco.
+
+**FastingBS**: No producir suficiente hormona secretada por el páncreas (insulina) o no responder a la insulina de manera adecuada hace que los niveles de azúcar en sangre del cuerpo aumenten, lo que aumenta el riesgo de un ataque cardíaco.
+
+**RestingECG**: Para las personas con bajo riesgo de enfermedad cardiovascular, la USPSTF concluye con certeza moderada que los daños potenciales de la detección con ECG en reposo o de ejercicio igualan o superan los beneficios potenciales. Para las personas con riesgo intermedio a alto, la evidencia actual es insuficiente para evaluar el balance de beneficios y daños del cribado.
+
+**MaxHR**: Se ha demostrado que un aumento de la frecuencia cardíaca de 10 latidos por minuto se asoció con un aumento del riesgo de muerte cardíaca en al menos un 20%.
+
+**ExerciseAngina**: Angina inducida por una actividad física.
+
+**Oldpeak**: el infarto de miocardio con elevación del segmento ST es una emergencia médica producida por la formación de un trombo sobre una placa rota de aterosclerosis que ocluye la circulación coronaria del músculo cardíaco.
+
+**ST_Slope**: pendiente del segmento ST 
+
 Se muestra un resumen de las variables.
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -86,6 +120,26 @@ A partir de esto, se puede concluir con que hay 12 variables y 918 observaciones
 <li> Variables de tipo entero: Age, RestingBP, Cholesterol, FastingBS, MaxHR, HeartDisease. </li>
 
 ## Importancia y objetivos de los análisis
+
+
+El termino cardiopatía se refiere a cualquier enfermedad del corazón independientemente de su naturaleza . Según la OMS las Enfermedades cardiovasculares (ECV) son un conjunto de trastornos al corazón y de los vasos sanguíneos, siendo la principal causa de defunción en el mundo.
+
+Como datos llamativos:
+
+• 17,5 millones de personas murieron por enfermedades cardiovasculares en el mundo.
+
+• 80% de los infartos de miocardio y de los AVC prematuros son prevenibles.
+
+• Más del 75% de las muertes causadas por ECV se producen en países de ingresos medios y bajos.
+
+En España y como podemos leer en la web de la Sociedad Española de Cardiología (SEC): La enfermedad cardiovascular continúa siendo la primera causa de muerte en nuestro país, con 120.859 fallecimientos registrados al año, según los últimos datos del Instituto Nacional de Estadística (2018).
+
+Si nos fijamos en el segundo punto de las afirmaciones de la OMS, el 80% de los infartos se pueden prevenir. Esto significa que con un estudio pormenorizado de los factores de riesgo, utilizando la cantidad de datos médicos existentes y modelos de machine learning, estas causas de defunción se podrían disminuir considerablemente pudiendo prever con antelación que grupos de población con sus respectivas características médicas van a tener más riesgos que otros.
+
+En definitiva, conocer aquellas variables que más influyen en el riesgo de padecer enfermedades cardiovasculares y ser capaces de obtener modelos capaces de predecir si una persona va a sufrir una enfermedad de este tipo o no puede salvar vidas.
+
+Por ello, podemos considerar la predicción de enfermedades cardiovasculares como uno de los objetivos más importantes de la minería de datos y del machine learning dentro de la medicina.
+
 
 # Preprocesado de datos
 
@@ -1088,15 +1142,33 @@ ggplot(data=heart,aes(x=FastingBS,fill=factor(HeartDisease)))+geom_bar() + ggtit
 
 ```
 
+
+
+Observando los gráficos anteriores podemos llevar a cabo las siguientes conclusiones:
+
+G1: La edad influye en el riesgo o no de sufrir una enfermedad cardíaca, de 60 a 80 años el riesgo de sufrir una enfermedad cardíaca es mayor.
+G2: Los hombres tienen más posibilidades de sufrir una enfermedad cardíaca que las mujeres
+G3:
+G4:
+G5:
+G6:
+G7:
+
+
+
+
+
+
 Variables continuas:
 
-EStudiamos la relación entre la variable edad y colesterol, ya que hemos estudiado su relación anteriormente. 
+Estudiamos la relación entre la variable edad y colesterol, ya que hemos estudiado su relación anteriormente. 
 
 ```{r}
 # Coresterol & Sexo
 ggplot(heart, aes(x =heart$Age, y = heart$Cholesterol)) + geom_point()+
   geom_smooth(method = "loess") 
 ```
+
 Estudiamos el resto de variables continuas, en relación con su edad y el riesgo o no de sufrir una enfermedad cardíaca:
 
 ```{r}
