@@ -13,13 +13,36 @@ output:
 
 ******
 
-# Detalles de la actividad
+# Descripción del dataset
 
-## Descripción
+
+## Introducción
 
 Este proyecto corresponde a la asignatura de Tipología y ciclo de vida de los datos del máster oficial de Ciencia de de datos de la Universidad Oberta de Cataluña UOC. En el pretendemos afianzar todos los conceptos estudiados en la segunda parte de la asignatura, limpieza y análisis de los datos. Para ello, en primer lugar deberemos elegir un dataset donde a través de la información recogida seamos capaces de llevar a cabo los análisis estudiados en la asignatura, así cómo obtener unas conclusiones de los análisis interesantes. 
 
-Para ello y después de análizar los distintos dataset disponibles en la plataforma kaggle, hemos optado por el conjunto de datos disponible en el siguiente enlace: https://www.kaggle.com/fedesoriano/heart-failure-prediction.
+## Elección del DataSet
+
+Para ello y después de analizar los distintos dataset disponibles en la plataforma kaggle, hemos optado por el conjunto de datos disponible en el siguiente enlace: https://www.kaggle.com/fedesoriano/heart-failure-prediction.
+
+## Importancia y objetivos de los análisis
+
+El termino cardiopatía se refiere a cualquier enfermedad del corazón independientemente de su naturaleza . Según la OMS las Enfermedades cardiovasculares (ECV) son un conjunto de trastornos al corazón y de los vasos sanguíneos, siendo la principal causa de defunción en el mundo.
+
+Como datos llamativos:
+
+• 17,5 millones de personas murieron por enfermedades cardiovasculares en el mundo.
+
+• 80% de los infartos de miocardio y de los AVC prematuros son prevenibles.
+
+• Más del 75% de las muertes causadas por ECV se producen en países de ingresos medios y bajos.
+
+En España y como podemos leer en la web de la Sociedad Española de Cardiología (SEC): La enfermedad cardiovascular continúa siendo la primera causa de muerte en nuestro país, con 120.859 fallecimientos registrados al año, según los últimos datos del Instituto Nacional de Estadística (2018).
+
+Si nos fijamos en el segundo punto de las afirmaciones de la OMS, el 80% de los infartos se pueden prevenir. Esto significa que con un estudio pormenorizado de los factores de riesgo, utilizando la cantidad de datos médicos existentes y modelos de machine learning, estas causas de defunción se podrían disminuir considerablemente pudiendo prever con antelación que grupos de población con sus respectivas características médicas van a tener más riesgos que otros.
+
+En definitiva, conocer aquellas variables que más influyen en el riesgo de padecer enfermedades cardiovasculares y ser capaces de obtener modelos capaces de predecir si una persona va a sufrir una enfermedad de este tipo o no puede salvar vidas.
+
+Por ello, podemos considerar la predicción de enfermedades cardiovasculares como uno de los objetivos más importantes de la minería de datos y del machine learning dentro de la medicina.
 
 ## Objetivos
 
@@ -29,17 +52,11 @@ de aquellas variables que afectan al riesgo de padecer enfermedades cardíacas.
 En concreto, llevaremos a cabo los distintas técnicas para responder a las siguientes preguntas:
 
 
-## Competencias
 
-Rellenar
 
-#  Introducción
+#  Integración y selección de los datos de interés a analizar
 
-## Elección del DataSet
 
-******
-
-El conjunto de datos que hemos elegido está en la siguiente url: https://www.kaggle.com/fedesoriano/heart-failure-prediction. Se ha escogido ya que es una temática muy interesante las enfermedades cardiovasculares y al mismo tiempo comprobamos que haya campos numéricos y categóricos. Lo que pretende responder es como afecta o no las enfermedades cardiovasculares en función de las caracterísitcas de las personas.
 
 
 ******
@@ -82,7 +99,6 @@ str(heart)
 
 Vamos a realizar una explicación más extensa de cada variable según los criterios médicos para conocer estos conceptos y su influencia respecto a la hora de sufrir una enfermedad cardíaca.
 
-
 **Age** : La edad es el factor de riesgo más importante en el desarrollo de enfermedades cardiovasculares o cardíacas, según la SEC, con aproximadamente un triple de riesgo con cada década de vida. Las vetas de grasa coronarias pueden comenzar a formarse en la adolescencia. Se estima que el 82 por ciento de las personas que mueren de enfermedad coronaria tienen 65 años o más. Simultáneamente, el riesgo de accidente cerebrovascular se duplica cada década después de los 55 años.
 
 **Sex**: Los hombres tienen un mayor riesgo de enfermedad cardíaca que las mujeres premenopáusicas. Una vez pasada la menopausia, se ha argumentado que el riesgo de una mujer es similar al del hombre, aunque datos más recientes de la OMS y la ONU lo niegan. Si una mujer tiene diabetes, tiene más probabilidades de desarrollar una enfermedad cardíaca que un hombre con diabetes.
@@ -103,7 +119,7 @@ Vamos a realizar una explicación más extensa de cada variable según los crite
 
 **Oldpeak**: el infarto de miocardio con elevación del segmento ST es una emergencia médica producida por la formación de un trombo sobre una placa rota de aterosclerosis que ocluye la circulación coronaria del músculo cardíaco.
 
-**ST_Slope**: pendiente del segmento ST 
+**ST_Slope**: pendiente del segmento ST. 
 
 Se muestra un resumen de las variables.
 
@@ -119,29 +135,8 @@ A partir de esto, se puede concluir con que hay 12 variables y 918 observaciones
 <li> Variables de tipo carácter: Sex, ChestPainType, RestingECG, ExerciseAngina, ST_Slope. </li>
 <li> Variables de tipo entero: Age, RestingBP, Cholesterol, FastingBS, MaxHR, HeartDisease. </li>
 
-## Importancia y objetivos de los análisis
 
-
-El termino cardiopatía se refiere a cualquier enfermedad del corazón independientemente de su naturaleza . Según la OMS las Enfermedades cardiovasculares (ECV) son un conjunto de trastornos al corazón y de los vasos sanguíneos, siendo la principal causa de defunción en el mundo.
-
-Como datos llamativos:
-
-• 17,5 millones de personas murieron por enfermedades cardiovasculares en el mundo.
-
-• 80% de los infartos de miocardio y de los AVC prematuros son prevenibles.
-
-• Más del 75% de las muertes causadas por ECV se producen en países de ingresos medios y bajos.
-
-En España y como podemos leer en la web de la Sociedad Española de Cardiología (SEC): La enfermedad cardiovascular continúa siendo la primera causa de muerte en nuestro país, con 120.859 fallecimientos registrados al año, según los últimos datos del Instituto Nacional de Estadística (2018).
-
-Si nos fijamos en el segundo punto de las afirmaciones de la OMS, el 80% de los infartos se pueden prevenir. Esto significa que con un estudio pormenorizado de los factores de riesgo, utilizando la cantidad de datos médicos existentes y modelos de machine learning, estas causas de defunción se podrían disminuir considerablemente pudiendo prever con antelación que grupos de población con sus respectivas características médicas van a tener más riesgos que otros.
-
-En definitiva, conocer aquellas variables que más influyen en el riesgo de padecer enfermedades cardiovasculares y ser capaces de obtener modelos capaces de predecir si una persona va a sufrir una enfermedad de este tipo o no puede salvar vidas.
-
-Por ello, podemos considerar la predicción de enfermedades cardiovasculares como uno de los objetivos más importantes de la minería de datos y del machine learning dentro de la medicina.
-
-
-# Preprocesado de datos
+# Limpieza y preprocesado de datos
 
 ## Conversión y estandarización
 
@@ -204,6 +199,7 @@ boxplot.stats(heart$RestingBP)$out
 __Cholesterol__:
 
 En esta variable se aprecian una serie de valores extremos, pero por el contrario no es extraño ya que un colesterol de 603 se puede tener (https://www.tuotromedico.com/parametros/colesterol-en-sangre-alto.htm), aunque es un valor muy elevado. También se puede tener el valor 100 que es óptimo.
+
 ```{r,eval=TRUE,echo=TRUE}
 
 boxplot(heart$Cholesterol,main="Colesterol")
@@ -221,6 +217,7 @@ boxplot.stats(heart$Cholesterol)$out
 __MaxHR__ :
 
 Se puede apreciar que hay dos valores extremos: 60 y 63. Esas frecuencias cardíacas __máximas__ son muy bajas y por tanto lo podemos detectar como valores extraños. 
+
 ```{r,eval=TRUE,echo=TRUE}
 
 boxplot(heart$MaxHR,main="Frecuencia cardíaca máxima alcanzada")
@@ -232,7 +229,7 @@ boxplot(heart$MaxHR,main="Frecuencia cardíaca máxima alcanzada")
 boxplot.stats(heart$MaxHR)$out
 
 ```
-A continuación, sustituímos esos valores por NA y luego lo trataremos mediante Knn.
+A continuación, sustituimos esos valores por NA y luego lo trataremos mediante Knn.
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -270,13 +267,14 @@ heart$MaxHR[posMaxHR]
 
 ## Estudio de Valores nulos
 
-Se aprecia que no hay ningun valor NA. 
+Se aprecia que no hay ningún valor NA. 
 
 ```{r,eval=TRUE,echo=TRUE}
 
 colSums(is.na(heart))
 
 ```
+
 A continuación, comprobaremos si algún campo tiene un valor 0.
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -284,6 +282,7 @@ A continuación, comprobaremos si algún campo tiene un valor 0.
 colSums(heart == 0)
 
 ```
+
 Viendo esto, se puede decir que no tiene sentido que los campos RestingBP y Cholesterol tengan ceros. En este caso, podemos hablar de información perdida.
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -301,8 +300,9 @@ heart$Cholesterol[posCholesterol] <- NA
 
 Para esos 0, hemos metido NA ya que es un valor desconocido y ahora miraremos mediante Knn como tratar esos datos.
 
-<br>
 Para solucionar estos valores perdidos, vamos a hacer uso de la función knn.
+
+// QUE ES EL KNN Y PORQUE USARLO
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -324,7 +324,7 @@ heart$Cholesterol <- Cholesterol_new
 
 ```
 
-Se comprueba que ya no hay valores pérdidos en esas posiciones:
+Se comprueba que ya no hay valores perdidos en esas posiciones:
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -336,9 +336,9 @@ heart$Cholesterol[posCholesterol]
 
 ```
 
-Observamos que los valores NA fueron sustitídos por otros en función de las características de los demás atributos.
-<br>
-Finalmente, vemos que ya no hay ningun valor perdido.
+Observamos que los valores NA fueron sustituidos por otros en función de las características de los demás atributos.
+
+Finalmente, vemos que ya no hay ningún valor perdido.
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -349,8 +349,10 @@ colSums(is.na(heart))
 
 ## PCA: Análisis de componentes principales
 
+QUE ES PCA Y PORQUE VAMOS A USARLO.
+
 Con el PCA lo que se busca es reducir la dimensionalidad. Partimos de una serie de atributos numéricos del dataset “heart.csv” correlacionados y eso lo convertiremos en menos variables sin estar relacionadas entre si, pero queriendo mantener la mayor información posible.
-<br>
+
 En el dataset "heart.csv", no todos los atributos son numéricos. Por tanto, los convertiremos y lo añadiremos en otro dataset.
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -374,6 +376,7 @@ heart_num$ST_Slope <- with(heart_num, ifelse(ST_Slope == "Down", 0,ifelse(ST_Slo
 ```
 
 En la gráfica se observa cuales son los componentes principales más significativos o con más “peso”. Estos son el PC1 y PC2.
+
 Se muestra un resumen de cada uno de los componentes principales.
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -414,8 +417,6 @@ Viendo esto, se puede ver como el PC1 le asigna más peso a la variable “Heart
 Por otro lado, vemos como el PC2 le asigna más peso a la variable “RestingECG” que se mueve por el eje Y.
 
 
-<br>
-
 Se muestra otro gráfico para que la información quede más clara.
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -424,8 +425,7 @@ biplot(pca, scale = 0, cex = 0.5, col = c("lightblue", "red"))
 
 ```
 
-Se aprecia como la información es bastante dispar entre los diferentes componentes PC1 y PC2. Por lo tanto, decidimos no eliminar ningún campo del dataset ya que podemos considerar que cada uno nos puede dar cierta importancia.
-
+Se aprecia como la información es bastante dispar entre los diferentes componentes PC1 y PC2. Por lo tanto, decidimos no eliminar ningún campo del dataset ya que podemos considerar que todas las variables son importantes.
 
 ## Normalización 
 
@@ -461,17 +461,42 @@ heart <- cbind(heart,Age_dist)
 
 ```
 
-Se discretiza esta variable para dividir la edad en rangos y mediante gráficos, poder ver comos e distribuye las características de enfermedades de corazón en función de la edad.
-
+Se discretiza esta variable para dividir la edad en rangos y  poder realizar los análisis gráficos más eficientemente, y de esta manera comprobar como influirá cada variable a la hora de sufrir una enfermedad cardíaca según los diferentes grupos de edad de la población. 
 
 
 # Análisis de los datos
 
-## Análisis descriptivo de las variables
 
-Ahora, tenemos el dataset sin valores vacíos así como nuevas variables normalizadas y discretas.
-<br>
+## Estudio descriptivo de las variables
+
+Ahora, tenemos el dataset sin valores vacíos así como con las nuevas variables normalizadas y discretizadas.
+
 Por lo tanto, se muestra un resumen del dataset en el cual podemos ver la media, moda, cuartiles y valores mínimos y máximos en el caso de variables numéricas.
+
+Obtenemos las distintas medidas para las variables cuantitativas:
+
+```{r}
+id = c(1,4,5,6,8,10)
+mean <- as.vector(sapply(heart[,id],mean,na.rm = TRUE))
+std <- as.vector(sapply(heart[,id],sd,na.rm = TRUE))
+median <- as.vector(sapply(heart[,id],median,na.rm = TRUE))
+mean.trim <- as.vector(sapply(heart[,id],mean,na.rm = TRUE,trim = 0.05))
+IQR <- as.vector(sapply(heart[,id],IQR,na.rm = TRUE))
+mad <- as.vector(sapply(heart[,id],mad,na.rm = TRUE))
+```
+
+Creamos dos tablas con las medidas obtenidas anteriormente:
+```{r}
+library(kableExtra)
+kable(data.frame(Variables = names(heart)[id],MEDIA   = mean, MEDIANA   = median, MEDIA_RECORTADA  = mean.trim),
+digits = 3, caption = "Estimaciones tendencia central")%>% kable_styling(bootstrap_options = c("striped","hover", "responsive"),position = "left")
+```
+```{r}
+kable(data.frame(Variables = names(heart)[id],SD = std, IQR = IQR, MAD = mad),
+digits = 3, caption = "Estimaciones de dispersión")%>% kable_styling(bootstrap_options = c("striped","hover", "responsive"),position = "left")
+```
+
+
 En el caso de los factores, podemos ver el número de ocurrencias que tiene dicho valor.
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -483,7 +508,7 @@ summary(heart)
 
 ### Comprobación de la normalidad
 
-En este apartado, comprobaremos la normalidad de las variables numéricas, pero las que no son dicotómicas.
+En este apartado, comprobaremos la normalidad de las variables numéricas no dicotómicas.
 
 __Age__
 
@@ -495,7 +520,7 @@ qqline(heart$Age)
 
 ```
 
-A simple vista, se puede ver que los datos están por la recta menos por los lados y podríamos asumir normalidad. De todas formas comprobaremos esto con el test de shapiro y Lilliefors.
+A simple vista, se puede ver que los datos están por la recta menos por los lados por ello no podríamos asumir la normalidad. Tendremos que comprobarlo con el test de shapiro y Lilliefors.
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -510,7 +535,7 @@ lillie.test(heart$Age)
 
 ```
 
-Viendo ambos test, se puede apreciar que no sigue una distribucción normal la variable "Age".
+Obserando ambos test, se puede apreciar que la variable **Age**no sigue una distribución normal.
 
 __RestingBP__
 
@@ -521,7 +546,7 @@ qqline(heart$RestingBP)
 
 ```
 
-Tal como se aprecia, los valores no suelen estar en la recta y por lo tanto no sigue una distribucción normal.
+Observando el gáfico la variable **RestingBP**  no sigue una distribucción normal.
 
 __Cholesterol__
 
@@ -532,7 +557,7 @@ qqline(heart$Cholesterol)
 
 ```
 
-Se aprecia que bastantes puntos están muy por fuera de la recta. Con esto, concluímos que el campo Cholesterol no sigue una distribución normal.
+Se aprecia en los extremos puntos muy distantes de la recta. Por ello, concluimos que el campo **Cholesterol** no sigue una distribución normal.
 
 __MaxHR__
 
@@ -543,8 +568,8 @@ qqline(heart$MaxHR)
 
 ```
 
-Se observa que los puntos suelen seguir la recta, menos en algunos lados.
-<br>
+Se observa que los puntos suelen seguir la recta, menos en loslados.
+
 Para estar más seguros aplicamos los test de shapiro y Lilliefors.
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -558,7 +583,7 @@ lillie.test(heart$MaxHR)
 
 ```
 
-Según ambos test, la variable MaxHR no sigue una distribución normal.
+Según ambos test, la variable **MaxHR** no sigue una distribución normal.
 
 __Oldpeak__
 
@@ -580,8 +605,8 @@ qqline(heart$Age_nor)
 
 ```
 
-Se aprecia que muchos puntos siguen la recta ( similar a la variable Age sin normalizar ).
-<br>
+Se aprecia que muchos puntos siguen la recta (similar a la variable Age sin normalizar ).
+
 A continuación, aplicamos los siguientes test:
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -597,9 +622,6 @@ lillie.test(heart$Age_nor)
 ```
 Nos da la misma información que la variable Age. Por tanto, podemos decir que no sigue una distribución normal.
 
-### Teorema del límite central
-
-Dado que el tamaño de este dataset es >30, se puede decir por el teorema del límite central que las variables mencionadas anteriormente siguen una distribución normal.
 
 
 ## Contraste de hipótesis
@@ -615,9 +637,9 @@ colMuj <- heart$Cholesterol[heart$Sex=="F"]
 
 ```
 
-Como hipotesis nula, se quiere saber si el colesterol en mujeres es igual que en el de los hombres.
-<br>
-Como hipotesis alternativa se quiere saber si el colesterol en mujeres es mayor que en hombres.
+Como hipótesis nula, indicamos que el colesterol de las mujeres es igual que al de los hombres.
+
+Como hipótesis alternativa indicamos que el colesterol de las mujeres es mayor que el de los hombres.
 
 $$
 \left\{
@@ -628,14 +650,13 @@ H_{1}: & \mu_M>\mu_H
 \right.\\
 \ Hipótesis\ unilateral
 $$
-Por el teorema del límite central, podemos asumir normalidad, puesto que tenemos una muestra de
-tamaño grande n y se desea realizar un test sobre la media. Por tanto, aplicamos un test de
-hipótesis de dos muestras sobre la media. Aplicaremos la distribución t, dado que no se conoce la
-varianza de la población.
-Es un test unilateral por la derecha.
-<br>
+Por el teorema del límite central, podemos asumir normalidad, puesto que tenemos una muestra de tamaño grande n y se desea realizar un test sobre la media. Por tanto, aplicamos un test de hipótesis de dos muestras sobre la media. 
 
-Ahora, comprobamos la homocesdasticidad.
+Aplicaremos la distribución t, dado que no se conoce la varianza de la población.
+
+Es un test unilateral por la derecha.
+
+Ahora, comprobamos la homocedasticidad.
 
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -644,7 +665,6 @@ var.test(colMuj, colHom)
 
 ```
 Se observa que p-value < 0.05. Por tanto, las varianzas no son iguales.
-<br>
 
 Calculamos manualmente este constraste:
 
@@ -682,12 +702,12 @@ t.test( colMuj,colHom , var.equal=FALSE, alternative = "greater")
 
 ```
 
-Se aprecia, que p-value < 0.05. Por tanto, se rechaza la hipótesis nula y se acepta la alternativa de que las mujeres tiene más colesterol que los hombres.
+Se aprecia, que p-value < 0.05. Por tanto, se rechaza la hipótesis nula y se acepta la alternativa de que las mujeres tiene más colesterol que los hombres. 
 
 ### Azúcar en sangre es mayor en hombres que en mujeres teniendo ambos enfermedades cardíacas
 
 
-Primero, calculamos dos variables para obtener las enfermades cardíacas de hombres y mujeres.
+Primero, calculamos dos variables para obtener las enfermedades cardíacas de hombres y mujeres.
 ```{r,eval=TRUE,echo=TRUE}
 
 carHom <- heart$FastingBS[heart$Sex=="M" & heart$HeartDisease=="1"]
@@ -696,9 +716,9 @@ carMuj <- heart$FastingBS[heart$Sex=="F" & heart$HeartDisease=="1"]
 
 ```
 
-Como hipotesis nula, se quiere saber si las enfermades cardíacas es igual en hombres que en mujeres.
-<br>
-Como hipotesis alternativa se quiere saber si las enfermades cardíacas es mayor en hombres que en mujeres.
+Como hipótesis nula, se quiere saber si las enfermedades cardíacas es igual en hombres que en mujeres.
+
+Como hipótesis alternativa se quiere saber si las enfermedades cardíacas es mayor en hombres que en mujeres.
 
 $$
 \left\{
@@ -710,14 +730,13 @@ H_{1}: & \mu_H>\mu_M
 \ Hipótesis\ unilateral
 $$
 
-Por el teorema del límite central, podemos asumir normalidad, puesto que tenemos una muestra de
-tamaño grande n y se desea realizar un test sobre la media. Por tanto, aplicamos un test de
-hipótesis de dos muestras sobre la media. Aplicaremos la distribución t, dado que no se conoce la
-varianza de la población.
-Es un test unilateral por la derecha.
-<br>
+Por el teorema del límite central, podemos asumir normalidad, puesto que tenemos una muestra de tamaño grande n y se desea realizar un test sobre la media. Por tanto, aplicamos un test de hipótesis de dos muestras sobre la media. 
 
-Ahora, comprobamos la homocesdasticidad.
+Aplicaremos la distribución t, dado que no se conoce la varianza de la población.
+
+Es un test unilateral por la derecha.
+
+Ahora, comprobamos la homocedasticidad.
 
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -726,7 +745,6 @@ var.test(carHom,carMuj)
 
 ```
 Se observa que p-value > 0.05. Por tanto, las varianzas son iguales.
-<br>
 
 A continuación, aplicamos el test de este contraste de hipótesis.
 
@@ -743,9 +761,9 @@ mean1 <- mean(carHom)
 mean2 <- mean(carMuj)
 
 
-df <- ((s1^2/n1 + s2^2/n2)^2) / ((s1^2/n1)^2/(n1-1) + (s2^2/n2)^2/(n2-1))
+df <- n1+n2-2
 
- S <- sqrt( ( (n1-1)*s1^2 + (n2-1)*s2^2 ) / (n1+n2-2) )
+S <- sqrt( ( (n1-1)*s1^2 + (n2-1)*s2^2 ) / (n1+n2-2) )
 
  tobs <- (mean1-mean2) / (S * sqrt(1/n1 + 1/n2))
  tcritL <- qt( alfa/2, n1+n2-2)
@@ -766,29 +784,19 @@ Aplicamos el test para comprobar si nos da el mismo resultado.
 
 ```{r,eval=TRUE,echo=TRUE}
 
-t.test( carHom,carMuj , var.equal=FALSE, alternative = "greater")
+t.test( carHom,carMuj , var.equal=TRUE, alternative = "greater")
 
 ```
 
-Se aprecia, que p-value > 0.05. Por tanto, se acepta la hipótesis nula de que los hombres con enfermedad cardíaca tienen igual azucar en sangre que las mujeres con enfermedad cardíaca.
+Se aprecia, que p-value > 0.05. Por tanto, se acepta la hipótesis nula de que los hombres con enfermedad cardíaca tienen igual azúcar en sangre que las mujeres con enfermedad cardíaca.
 
 ## Estudio de correlación entre las variables
 
-En este apartado, representaremos la matriz de correlación del dataset.
-<br>
-Pasamos todsas las variables a numéricas en un dataset nuevo.
-```{r,eval=TRUE,echo=TRUE}
+En este apartado queremos representar la matriz de correlación del dataset.
 
-heart_num <-heart[1:12]
-heart_num$Sex <- as.numeric(heart_num$Sex)
-heart_num$ChestPainType <- as.numeric(heart_num$ChestPainType)
-heart_num$RestingECG <- as.numeric(heart_num$RestingECG)
-heart_num$ExerciseAngina <- as.numeric(heart_num$ExerciseAngina)
-heart_num$ST_Slope <- as.numeric(heart_num$ST_Slope)
+Utilizamos el dataset utilizado para el análisis anterior de PCA
 
-```
 
-<br>
 Calculamos la correlación de las variables usando el método de pearson.
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -807,17 +815,24 @@ corrplot(Corelacion, method = "number")
 ```
 
 A partir de aqui, podemos observar lo siguiente: 
-<br>
+
+
 <li>Las variables HeartDisease y ST_Slope tienen una correlación moderada directa (0.56). </li>
 <li>Las variables Oldpeak y ST_Slope tienen una correlación moderada directa (0.50). </li>
 <li> Las variables MaxHR y HeartDisease tienen una correlación débil directa (0.40). </li>
+
+Si observamos la variable que consideramos más importante en nuestro dataset, **HeartDisease**, podemos decir que aquellas variables que tienen  más correlación son: **MaxHR**, **ExerciseAngina**,**Olpeak** y **ST_Slope**. 
+
+Este análisis previo nos servirá para en los modelos de regresión siguientes identificar cuales podrían ser aquellas variables independientes más importantes.  
 
 ## Regresión lineal
 
 ### Regresión lineal simple
 
+En los modelos de regresión lineal la variable dependiente deberá ser una variable continua por ello consideramos como variable explicativa la variable **MaxHR**.
 
-Se calcula un modelo de regresión lineal simple cuya variable dependiente es MaxHR y independiente es Age.
+En primer lugar, realizamos un modelo de regresión lineal simple cuya variable dependiente es MaxHR y independiente es Age.
+
 ```{r,eval=TRUE,echo=TRUE}
 
 Model_reg_sim <- lm(MaxHR~Age,data=heart)
@@ -825,11 +840,13 @@ summary(Model_reg_sim)
 
 ```
 
-Se observa que el coeficiente de determianción ajustado es bajo: 14.6%.
+Se observa que el coeficiente de determinación ajustado es bajo: 14.6%.
 
 ### Regresión lineal múltiple
 
-Se crea un modelo de regresión lineal múltiple con la variable dependiente MaxHR y indpendientes:HeartDisease, ST_Slope, FastingBS, Oldpeak, RestingECG, Sex, Cholesterol.
+Se crea un modelo de regresión lineal múltiple con la variable dependiente **MaxHR** y indpendientes: **HeartDisease**, **ST_Slope**, **FastingBS**, **Oldpeak**, **RestingECG**, **Sex**, **Cholesterol**.
+
+
 ```{r,eval=TRUE,echo=TRUE}
 
 Model_reg_mul <- lm(MaxHR~Age+HeartDisease+ST_Slope+FastingBS+Oldpeak+RestingECG+Sex+Cholesterol,data=heart)
@@ -839,11 +856,14 @@ summary(Model_reg_mul)
 
 Se aprecia un coeficiente de determinación bajo (30%).
 
+Podemos considerar que estos modelos no son validos.
+
+
 ## Regresión logística
 
 ### Regresión logística simple
 
-Vamos a crear una regresión logística simple como variable dependiente HeartDisease y indpendiente MaxHR.
+Vamos a crear una regresión logística simple como variable dependiente **HeartDisease** y independiente **MaxHR**.
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -866,7 +886,9 @@ Se observa que p-value >0.05. Por tanto, el modelo ajusta bien los datos.
 
 ### Regresión logística múltiple
 
-Calculamos una regresión logística múltiple con HeartDisease como variable dependiente y ST_Slope, Oldpeak, MaxHR, ChestPainType, RestingBP, Age_nor como variables dependientes
+En este modelo queremos conocer la probabilidad de una persona de sufrir una enfermedad cardíaca o no, dependiendo de una serie de variables independientes.
+
+Calculamos una regresión logística múltiple con **HeartDisease** como variable dependiente y **ST_Slope**, **Oldpeak**, **MaxHR**, **ChestPainType**, **RestingBP**, **Age_nor** como variables dependientes
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -875,7 +897,7 @@ summary(model_logis2)
 
 ```
 Se aprecia que el AIC es mucho menor y por tanto, el modelo es mejor.
-<br>
+-
 Calculamos la bondad de ajuste:
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -885,16 +907,64 @@ hoslem.test(heart$HeartDisease,fitted(model_logis2))
 ```
 Se aprecia que el modelo tiene p-value > 0.05. Por tanto, ajusta bien los datos.
 
-## Modelos de clasificación
+Vamos a dividir el conjunto de los datos en un conjunto de entrenamiento y otro de prueba para validar el modelo.
 
 ```{r,eval=TRUE,echo=TRUE}
 
-head(heart)
+set.seed(42)
+index <- sample(1:nrow(heart),size = floor(0.80*nrow(heart)))
+
+train <- heart[index,]
+test <- heart[-index,]
 
 ```
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+model_logis3 <- glm(formula=HeartDisease~ST_Slope+Oldpeak+MaxHR+ChestPainType+RestingBP+Age_nor,data=train,family=binomial())
+summary(model_logis3)
+
+```
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+predicion_1 <- ifelse(predict(model_logis3,newdata = test, type="response") >=0.5,1,0)
+predicion_1
+```
+
+```{r,eval=TRUE,echo=TRUE}
+
+mat_conf_1<-table(test$HeartDisease,Predicted=predicion_1)
+mat_conf_1
+
+```
+
+```{r,eval=TRUE,echo=TRUE}
+if(!require(gmodels)){
+    install.packages('gmodels', repos='http://cran.us.r-project.org')
+    library(gmodels)
+}
+
+CrossTable(test$HeartDisease,predicion_1,prop.chisq  = FALSE, prop.c = FALSE, prop.r =FALSE,dnn = c('Reality', 'Prediction'))
+
+```
+
+```{r,eval=TRUE,echo=TRUE}
+
+print(sprintf("La precisión del modelo es: %.4f %%",100*(158/184)))
+```
+EXPLICACION Y REVISION
+
+## Modelos de clasificación
+
+El objetivo de este modelo es clasificar adecuadamente aquellas personas según los datos dados para cada variable si va a sufrir una enfermedad cardíaca o no.
+
+
 ### Preparación de los datos para el modelo
 
-Nos interesa desordenar los datos para poder elegir registros aleatorios. Guardaremos los datos con el nuevo nombre de: heart_clasification
+Nos interesa desordenar los datos para poder elegir registros aleatorios. Guardaremos los datos con el nuevo nombre de: **heart_clasification**
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -981,20 +1051,33 @@ Se observa que los atributos que más se usan en este modelo son “ST_Slope” 
 
 Además, se han obtenido una serie de reglas que el modelo ha acogido como decisivas para observar si una persona tiene riesgo de enfermedad del corazón. Todas estas se explican a continuación:
 
-1. Si una persona es de género femenino, tiene una presión arterial menor o igual que 148, un azúcar en sangre menor o igual a 0 y no tiene angina inducida por el ejercicio, no tendrá enfermedad del corazón con un 97.5%.
-2. Una persona con dolor de pecho NAP, una presión arterial menor o igual que 132, una máxima frecuencia cardíaca de 150, tendrá una probabilidad de no tener enfermedad del corazón con un 90.5%.
-3. Con una probabilidad del 87.8%, una persona con dolor de pecho ATA/TA y una máxima frecuencia cardíaca mayor que 150, no tednrá una enfermedad cardíaca.
-4. Una persona cuyo ST_Slope es Up, no tendrá una enfermedad del corazón con un 82.8%.
-5. Una persona con dolor de epcho ASY, una presióna rterial menor o igual que 131, azúcar en sangre mayor que 0, tendrá una enfermedad cardíaca con una probabilidad de 98.1%.
-6. Con una probabilidad del 96%, una persona con dolor de pecho ASY, el colesterol menor o igual a 197 y con angina inducida por el ejercicio, tendrá una enfermedad del corazón.
-7. Una persona con dolor de pecho ASY, azúcar en sangre mayor que 0 y un Oldpeak de 0.6, tendrá enfermedad del corazon con un 95.2%.
-8. Con una probabilidad del 94.8%, un hombre con dolor de pecho  ASY, colesterol mayor que 227, azúcar en sangre menor o igual a 0, con dolor de angina inducida por el ejercicio, tendrá enfermedad del corazón.
-9. Un hombre con Oldpeak menor o igual a 0.3 y con ST_Slope down/flat, tendrá una enfermedad del corazón con un 93.9%.
-10. Un hombre con dolor de pecho ASY, azúcar en sangre menor o igual a 126, una máxima frecuencia cardíaca entre 146-160 y un ST_Slope Up, tendrá una enfermedad cardíaca con un 90.9%.
-11. Una persona con dolor de pecho ASY , azúcar en sangre menor o igual a 126, sin dolor de angina inducida por el ejercicio, con  Oldpeak mayor que  0.4 y ST_Slope  Up, tendrá enfermedad del corazón con un 90%.
-12. Una persona con ST_Slope down/flat, tendrá una enfermedad cardíaca con un 80.1%.
+REVISAR
 
-Viendo todo esto, se puede decir que  una persona que no tiene dolor de angina inducida por el ejercicio, con azúcar en sangre menor o igual a 0 y una presión arterial menor o igual a 148, no tenderá a tener enfermedades cardíacas.
+    1. Si una persona es de género femenino, tiene una presión arterial menor o igual que 148, un azúcar en sangre menor o igual a 0 y no tiene angina inducida por el ejercicio, no tendrá enfermedad del corazón con un 97.5%.
+    
+    2. Una persona con dolor de pecho NAP, una presión arterial menor o igual que 132, una máxima frecuencia cardíaca de 150, tendrá una probabilidad de no tener enfermedad del corazón con un 90.5%.
+    
+    3. Con una probabilidad del 87.8%, una persona con dolor de pecho ATA/TA y una máxima frecuencia cardíaca mayor que 150, no tednrá una enfermedad cardíaca.
+    
+    4. Una persona cuyo ST_Slope es Up, no tendrá una enfermedad del corazón con un 82.8%.
+    
+    5. Una persona con dolor de epcho ASY, una presión arterial menor o igual que 131, azúcar en sangre mayor que 0, tendrá una enfermedad cardíaca con una probabilidad de 98.1%.
+    
+    6. Con una probabilidad del 96%, una persona con dolor de pecho ASY, el colesterol menor o igual a 197 y con angina inducida por el ejercicio, tendrá una enfermedad del corazón.
+    
+    7. Una persona con dolor de pecho ASY, azúcar en sangre mayor que 0 y un Oldpeak de 0.6, tendrá enfermedad del corazon con un 95.2%.
+    
+    8. Con una probabilidad del 94.8%, un hombre con dolor de pecho  ASY, colesterol mayor que 227, azúcar en sangre menor o igual a 0, con dolor de angina inducida por el ejercicio, tendrá enfermedad del corazón.
+    
+    9. Un hombre con Oldpeak menor o igual a 0.3 y con ST_Slope down/flat, tendrá una enfermedad del corazón con un 93.9%.
+    
+    10. Un hombre con dolor de pecho ASY, azúcar en sangre menor o igual a 126, una máxima frecuencia cardíaca entre 146-160 y un ST_Slope Up, tendrá una enfermedad cardíaca con un 90.9%.
+    
+    11. Una persona con dolor de pecho ASY , azúcar en sangre menor o igual a 126, sin dolor de angina inducida por el ejercicio, con  Oldpeak mayor que  0.4 y ST_Slope  Up, tendrá enfermedad del corazón con un 90%.
+    
+    12. Una persona con ST_Slope down/flat, tendrá una enfermedad cardíaca con un 80.1%.
+
+Viendo todo esto, se puede decir que una persona que no sufre dolor de angina inducida por el ejercicio, con azúcar en sangre menor o igual a 0 y una presión arterial menor o igual a 148, su posibilidad de terner enfermedades cardíacas será muy baja.
 
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -1046,29 +1129,32 @@ Vamos a crear la matriz de confusión
 
 ```{r,eval=TRUE,echo=TRUE}
 
-mat_conf<-table(testy,Predicted=predicted_model)
-mat_conf
+mat_conf_2<-table(testy,Predicted=predicted_model)
+mat_conf_2
 
 ```
 
 ```{r,eval=TRUE,echo=TRUE}
-if(!require(gmodels)){
-    install.packages('gmodels', repos='http://cran.us.r-project.org')
-    library(gmodels)
-}
+
 
 CrossTable(testy, predicted_model,prop.chisq  = FALSE, prop.c = FALSE, prop.r =FALSE,dnn = c('Reality', 'Prediction'))
 
 ```
 
-Se aprecia que el verdadero positivo  es 32% frente a un 0.62% de falsos positivos. Por lo tanto, tiene una alta sensibilidad.
-<br>
+```{r,eval=TRUE,echo=TRUE}
+
+print(sprintf("La precisión del modelo4 es: %.4f %%",100*sum(predicted_model == testy) / length(predicted_model)))
+
+```
+
+Se aprecia que los verdaderos positivos son un 32% frente a un 6.2% de falsos positivos. Por lo tanto, tiene una alta sensibilidad.
+
 Por otro lado, se observa que los verdaderos negativos es 51.6% frente a un 10.1% de falsos negativos, entonces se puede decir que tiene una alta especificidad.
 
 ### Modelo con mejora adaptative boosting
 
 
-A continuación, utilizamos otro enfoque para comparar los resultados: incorporar como novedad “adaptative boosting” . La idea de esta técnica es generar varios clasificadores, con sus correspondientes arboles de decisión y su ser de reglas. Cuando un nuevo caso va a ser clasificado, cada clasificador vota cual es la clase predicha. Los votos son sumados y determina la clase final.
+A continuación, utilizamos otro enfoque para comparar los resultados: incorporar como novedad “adaptative boosting”. La idea de esta técnica es generar varios clasificadores, con sus correspondientes arboles de decisión y su ser de reglas. Cuando un nuevo caso va a ser clasificado, cada clasificador vota cual es la clase predicha. Los votos son sumados y determina la clase final.
 
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -1077,7 +1163,7 @@ modelo_trials <- C50::C5.0(trainx, trainy, trials = 10, rules = TRUE)
 
 ```
 
-Ahora, calculamos la precisón del modelo a partir de la matriz de confianza.
+Ahora, calculamos la precisión del modelo a partir de la matriz de confianza.
 
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -1104,7 +1190,7 @@ CrossTable(testy, predicted_model,prop.chisq  = FALSE, prop.c = FALSE, prop.r =F
 Se aprecia que el verdadero positivo es 32.4% frente a un 0.59% de falsos positivos. Por lo tanto, tiene una alta sensibilidad. 
 Por otro lado, se observa que los verdaderos negativos es 51% frente a un 10.8% de falsos negativos, entonces se puede decir que tiene una alta especificidad.
 
-
+AÑADIR VARIABLES DISCRETAS
 
 # Visualización
 
@@ -1112,9 +1198,6 @@ Vamos a realizar diferentes estudios gráficos para analizar las distintas varia
 
 Para ello, diferenciaremos entre los tipos de variables continuas y discretas para su análisis y sí fuera necesario transformaremos las variables para su estudio más eficiente. 
 
-```{r,eval=TRUE,echo=TRUE}
-head(heart)
-```
 
 Variables discretas:
 
@@ -1147,6 +1230,7 @@ ggplot(data=heart,aes(x=FastingBS,fill=factor(HeartDisease)))+geom_bar() + ggtit
 Observando los gráficos anteriores podemos llevar a cabo las siguientes conclusiones:
 
 G1: La edad influye en el riesgo o no de sufrir una enfermedad cardíaca, de 60 a 80 años el riesgo de sufrir una enfermedad cardíaca es mayor.
+
 G2: Los hombres tienen más posibilidades de sufrir una enfermedad cardíaca que las mujeres
 G3:
 G4:
@@ -1156,41 +1240,30 @@ G7:
 
 
 
+Utilizamos las variables discretizadas anteriormente para realizar gráficos más representativos:
+
+AÑADIR GRÁFICOS
 
 
-
-Variables continuas:
-
-Estudiamos la relación entre la variable edad y colesterol, ya que hemos estudiado su relación anteriormente. 
-
-```{r}
-# Coresterol & Sexo
-ggplot(heart, aes(x =heart$Age, y = heart$Cholesterol)) + geom_point()+
-  geom_smooth(method = "loess") 
-```
-
-Estudiamos el resto de variables continuas, en relación con su edad y el riesgo o no de sufrir una enfermedad cardíaca:
-
-```{r}
-ggplot(heart, aes(RestingBP, Age, colour = HeartDisease)) + 
-  geom_point()+ ggtitle("AÑADIR TITULO GRÁFICO") 
-
-ggplot(heart, aes(Cholesterol, Age, colour = HeartDisease)) + 
-  geom_point()+ ggtitle("AÑADIR TITULO GRÁFICO") 
-
-ggplot(heart, aes(MaxHR, Age, colour = HeartDisease)) + 
-  geom_point() + ggtitle("AÑADIR TITULO GRÁFICO") 
-
-ggplot(heart, aes(Oldpeak, Age, colour = HeartDisease)) + 
-  geom_point() + ggtitle("AÑADIR TITULO GRÁFICO") 
-
-```
 
 COMENTAR CONCLUSIONES DE CADA GRÁFICO y añadir más gráficos si fuera necesario
 
 # Conclusiones
 
 añadir
+
+
+
+# Contribuciones
+
+| **Contribuciones**          | **Firma**                          |
+|-----------------------------|------------------------------------|
+| Investigación previa        | Brais Santos, Jorge Álvarez Gracia |
+| Redacción de las respuestas | Brais Santos, Jorge Álvarez Gracia |
+| Desarrollo código           | Brais Santos, Jorge Álvarez Gracia |
+
 # Recursos
 
-añadir
+Enlace Vídeo: 
+
+Enlace repositorio GitHub: 
