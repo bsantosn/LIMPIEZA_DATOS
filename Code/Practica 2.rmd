@@ -64,10 +64,10 @@ En concreto, llevaremos a cabo los distintas técnicas para responder a las sigu
 
 ******
 
-Se lee el fichero "heart.csv".
+Se lee el fichero "heart_in.csv".
 ```{r,eval=TRUE,echo=TRUE}
 
-heart <- read.csv("heart.csv",sep=",")
+heart <- read.csv("../data/heart_in.csv",sep=",")
 
 ```
 

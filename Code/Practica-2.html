@@ -248,8 +248,8 @@ pre code {
 <div id="carga-del-dataset" class="section level2" number="2.1">
 <h2><span class="header-section-number">2.1</span> Carga del dataset</h2>
 <hr />
-<p>Se lee el fichero “heart.csv”.</p>
-<pre class="r"><code>heart &lt;- read.csv(&quot;heart.csv&quot;,sep=&quot;,&quot;)</code></pre>
+<p>Se lee el fichero “heart_in.csv”.</p>
+<pre class="r"><code>heart &lt;- read.csv(&quot;../data/heart_in.csv&quot;,sep=&quot;,&quot;)</code></pre>
 </div>
 <div id="explicación-de-las-variables" class="section level2" number="2.2">
 <h2><span class="header-section-number">2.2</span> Explicación de las variables</h2>
@@ -1440,7 +1440,7 @@ summary(modelo_clasificacion_C50)</code></pre>
 ##  = C5.0Control(noGlobalPruning = FALSE))
 ## 
 ## 
-## C5.0 [Release 2.07 GPL Edition]      Sun Dec 26 14:05:15 2021
+## C5.0 [Release 2.07 GPL Edition]      Sun Dec 26 14:12:49 2021
 ## -------------------------------
 ## 
 ## Class specified by attribute `outcome&#39;
@@ -1883,6 +1883,7 @@ ggplot(data=heart,aes(x=FastingBS,fill=factor(HeartDisease)))+geom_bar() + ggtit
 <p>Utilizamos las variables discretizadas anteriormente para realizar gráficos más representativos:</p>
 <p>AÑADIR GRÁFICOS</p>
 <p>COMENTAR CONCLUSIONES DE CADA GRÁFICO y añadir más gráficos si fuera necesario</p>
+<p>CSV FINAL</p>
 </div>
 <div id="conclusiones" class="section level1" number="6">
 <h1><span class="header-section-number">6</span> Conclusiones</h1>
