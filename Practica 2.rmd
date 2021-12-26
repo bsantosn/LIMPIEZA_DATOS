@@ -1248,6 +1248,9 @@ AÑADIR GRÁFICOS
 
 COMENTAR CONCLUSIONES DE CADA GRÁFICO y añadir más gráficos si fuera necesario
 
+CSV FINAL
+
+
 # Conclusiones
 
 añadir
