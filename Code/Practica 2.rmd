@@ -896,8 +896,9 @@ model_logis2 <- glm(formula=HeartDisease~ST_Slope+Oldpeak+MaxHR+ChestPainType+Re
 summary(model_logis2)
 
 ```
+
 Se aprecia que el AIC es mucho menor y por tanto, el modelo es mejor.
--
+
 Calculamos la bondad de ajuste:
 
 ```{r,eval=TRUE,echo=TRUE}
