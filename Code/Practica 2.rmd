@@ -359,7 +359,6 @@ colSums(is.na(heart))
 
 ## PCA: Análisis de componentes principales
 
-QUE ES PCA Y PORQUE VAMOS A USARLO.
 
 Con el PCA lo que se busca es reducir la dimensionalidad. Partimos de una serie de atributos numéricos del dataset “heart.csv” correlacionados y eso lo convertiremos en menos variables sin estar relacionadas entre si, pero queriendo mantener la mayor información posible.
 
