@@ -1258,7 +1258,7 @@ heart_2$HeartDisease <- as.factor(heart_2$HeartDisease)
 
 ```
 
-Vamos fijarnos el análisis PCA anterior para ordenar dichas variables según su importancia en el modelo y de esta manera usar para el modelo de clasificación aquellas variables que maximicen el resultado.
+Vamos a fijarnos el análisis PCA anterior para ordenar dichas variables según su importancia en el modelo y de esta manera usar para el modelo de clasificación aquellas variables que maximicen el resultado.
 
 ```{r,eval=TRUE,echo=TRUE}
 fviz_contrib(pca, addlabels = TRUE, choice = "var", axes = 1, top = 20)
