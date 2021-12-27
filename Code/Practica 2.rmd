@@ -65,6 +65,7 @@ En concreto, llevaremos a cabo los distintas técnicas para responder a las sigu
 ******
 
 Se lee el fichero "heart_in.csv".
+
 ```{r,eval=TRUE,echo=TRUE}
 
 heart <- read.csv("../data/heart_in.csv",sep=",")
@@ -298,11 +299,14 @@ heart$Cholesterol[posCholesterol] <- NA
 
 ```
 
-Para esos 0, hemos metido NA ya que es un valor desconocido y ahora miraremos mediante Knn como tratar esos datos.
+Para esos 0, hemos metido NA ya que es un valor desconocido y ahora miraremos mediante KNN como tratar esos datos.
 
-Para solucionar estos valores perdidos, vamos a hacer uso de la función knn.
+Para solucionar estos valores perdidos, vamos a hacer uso de la función KNN.
 
-// QUE ES EL KNN Y PORQUE USARLO
+El algoritmo KNN o imputación del vecino más cercano es un algoritmo supervisado cuyo objetivo es que a partir de un juego de datos inicial clasificar correctamente las instancias nuevas. en nuestro caso los valores nulos. 
+
+KNN buscará las distancias entre una consulta y todos los ejemplos en los datos, seleccionando el número especificado ejemplos (K) más cercanos al registro que queremos clasificar y seguidamente elegirá el valor más frecuente
+
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -978,7 +982,8 @@ Para la futura evaluación del árbol de decisión, es necesario dividir el conj
 
 Lo más correcto será utilizar un conjunto de datos diferente del que utilizamos para construir el árbol, es decir, un conjunto diferente del de entrenamiento. No hay ninguna proporción fijada con respecto al número relativo de componentes de cada subconjunto, pero la más utilizada acostumbra a ser 2/3 para el conjunto de entrenamiento y 1/3, para el conjunto de prueba.
 
-La variable por la que clasificaremos es HeartDisease, para clasificar si existe riesgo de enfermedad cardíaca o no, y que se sitúa en nuestro en la columna, la 16. De esta forma, tendremos un conjunto de datos para el entrenamiento y uno para la validación
+La variable por la que clasificaremos es HeartDisease, para clasificar si existe riesgo de enfermedad cardíaca o no, y que se sitúa en nuestro en la columna, la 12. De esta forma, tendremos un conjunto de datos para el entrenamiento y uno para la validación.
+Para clasificar dicha variable utilizaremos tpdas las variables anteriores excepto la edad normalizada y la edad discreta. 
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -1109,8 +1114,8 @@ Vamos a representar gráficamente el arbol obtenido de dos maneras diferentes:
 
 ```{r,eval=TRUE,echo=TRUE}
 
-rpart.plot(modelo_clasificacion_rpart, type=2,extra = 2, under = TRUE, faclen=5,cex=.55) 
-rpart.plot(modelo_clasificacion_rpart, type=2,extra = 8, under = TRUE, faclen=5,cex=.55) 
+rpart.plot(modelo_clasificacion_rpart, type=2,extra = 2, under = TRUE, faclen=5,cex=.85) 
+rpart.plot(modelo_clasificacion_rpart, type=2,extra = 8, under = TRUE, faclen=5,cex=.85) 
 
 ```
 
@@ -1157,10 +1162,145 @@ Por otro lado, se observa que los verdaderos negativos es 51.6% frente a un 10.1
 
 A continuación, utilizamos otro enfoque para comparar los resultados: incorporar como novedad “adaptative boosting”. La idea de esta técnica es generar varios clasificadores, con sus correspondientes arboles de decisión y su ser de reglas. Cuando un nuevo caso va a ser clasificado, cada clasificador vota cual es la clase predicha. Los votos son sumados y determina la clase final.
 
+Además discretearemos el resto de variables continuas para intentar mejorar el modelo anterior , ya que los modelos de clasificación se compartan mejor con variables categóricas. Este proceso también nos servirá de utilidad a la hora de hacer representaciones gráficas más representativas.
+
+Creamos un nuevo dataframe.
+
+
 
 ```{r,eval=TRUE,echo=TRUE}
 
-modelo_trials <- C50::C5.0(trainx, trainy, trials = 10, rules = TRUE)
+heart_2 <-heart
+
+head(heart_2)
+
+```
+
+Discretizamos el resto de variables:
+
+Vamos a disctretizar nuevamente la **edad**, esta vez según criterios médicos. Teniendo en cuenta los criterios médicos y la distribución de los registros hemos decidido discretizarlos en los distintos grupos:
+
+    0-39(Riesgo muy bajo)
+    40-54(Riesgo bajo)
+    55-64(Riesgo medio)
+    65-100(Riesgo alto)
+    
+    
+```{r,eval=TRUE,echo=TRUE}
+heart_2["edad_discretizada"] <- cut(heart$Age, breaks = c(0,40,55,65,100), labels = c("0-39(Riesgo muy bajo)", "40-54(Riesgo bajo)", "55-64(Riesgo medio)", "65-100(Riesgo alto)"))
+```
+
+
+Variable **RestingBP**T, Presión arterial:
+
+Para esta variable también tendremos en cuenta las categorías establecidas por los cardiólogos:
+
+    Normal, menos de 120 
+    Elevada: 120-129
+    Presión arterial alta nivel 1: 130-139
+    Presión arterial alta nivel 2: 140-179
+    Crisis de hipertensión: mayor de 180
+
+```{r,eval=TRUE,echo=TRUE}
+
+heart_2["restingBP_discretizado"] <- cut(heart$RestingBP , breaks = c(0,120,130,140,180,500), labels = c("0-119(Normal)", "120-129(Elevada)", "130-139(Alta nivel 1)", "140-179(Alta nivel 2)", "180-x(Crisis de hipertesión)"))
+
+```
+
+Variable **coresterol**, en este caso vamos a discretizar la variable únicamente siguiendo criterios médicos, ya que han sido rigurosamente establecidos.
+
+Se considera deseable un nivel de colesterol menor de 200 mg/dl, alto entre 200 y 239 y muy alto mayor de 240 mg/dl
+
+```{r,eval=TRUE,echo=TRUE}
+
+heart_2["chol_discretizado"] <- cut(heart$Cholesterol, breaks = c(-1,200,240,1000), labels = c("0-199(Riesgo bajo)", "200-239(Riesgo medio)", "240-x(Riesgo alto)"))
+
+```
+
+Variable **FastingBS**, un nivel de glucosa sanguínea en ayunas por debajo de 100 miligramos por decilitro (mg/dl) (5,6 milimoles por litro [mmol/l]) se considera normal. Un nivel de glucosa sanguínea en ayunas entre 100 y 125 mg/dL (5,6 a 7,0 mmol/L ) se considera prediabetes. En este caso, tenemos una variable binaria. 0 representa normal y 1 alta. factorizamos dicha variable. 
+
+```{r,eval=TRUE,echo=TRUE}
+heart_2$FastingBS <- as.factor(heart_2$FastingBS)
+
+```
+
+```{r,eval=TRUE,echo=TRUE}
+
+
+summary(heart[,"FastingBS"])
+
+```
+
+Variable **MaxHR**, no tiene sentido discretizar esta variable.
+
+Variable **OldPeak**:
+
+```{r,eval=TRUE,echo=TRUE}
+
+heart_2["oldpeak_discretizado"] <- cut(heart$Oldpeak, breaks = c(-2,0,2,4,6,8,10), labels = c(0, 1, 2, 3,4,5))
+
+```
+
+Factorizamos la variable que queremos clasificar, HeartDisease:
+
+```{r,eval=TRUE,echo=TRUE}
+heart_2$HeartDisease <- as.factor(heart_2$HeartDisease)
+
+```
+
+Vamos fijarnos el análisis PCA anterior para ordenar dichas variables según su importancia en el modelo y de esta manera usar para el modelo de clasificación aquellas variables que maximicen el resultado.
+
+```{r,eval=TRUE,echo=TRUE}
+fviz_contrib(pca, addlabels = TRUE, choice = "var", axes = 1, top = 20)
+```
+Ordenamos las variables:
+
+```{r,eval=TRUE,echo=TRUE}
+library(dplyr)
+heart_2 = heart_2 %>% select(ST_Slope, ExerciseAngina , MaxHR, Oldpeak, Age, ChestPainType, Sex, FastingBS, RestingBP, RestingECG, Cholesterol,  oldpeak_discretizado, edad_discretizada, restingBP_discretizado, chol_discretizado, HeartDisease)
+
+
+head(heart_2)
+
+```
+
+Ya tenemos el dataframe que podremos utilizar en el modelo.
+
+
+```{r,eval=TRUE,echo=TRUE}
+
+set.seed(1)
+heart_clasification_2 <- heart_2[sample(nrow(heart_2)),]
+```
+
+En este caso utilizaremos todas las variables, 15, para clasificar la variable **HeartDisease**, 16. 
+
+```{r,eval=TRUE,echo=TRUE}
+
+set.seed(666)
+y <- heart_clasification_2[,16] 
+X <- heart_clasification_2[,1:15] 
+
+```
+
+Dividimos el dataset en dos partes diferenciadas, train y test. Podemos crear directamente un rango utilizando el parámetro split_prop
+
+```{r,eval=TRUE,echo=TRUE}
+
+split_prop <- 3 
+indexes = sample(1:nrow( heart_clasification_2), size=floor(((split_prop-1)/split_prop)*nrow(heart_clasification_2)))
+trainx2<-X[indexes,]
+trainy2<-y[indexes]
+testx2<-X[-indexes,]
+testy2<-y[-indexes]
+
+```
+
+Creamos el modelo con técnicas de Boosting, 100 intentos:
+
+```{r,eval=TRUE,echo=TRUE}
+
+modelo_trials_2 <- C50::C5.0(trainx2, trainy2, trials = 100, rules = FALSE)
 
 ```
 
@@ -1169,29 +1309,38 @@ Ahora, calculamos la precisión del modelo a partir de la matriz de confianza.
 
 ```{r,eval=TRUE,echo=TRUE}
 
-predicted_model <- predict( modelo_trials, testx, type="class" )
-mat_conf<-table(testy,Predicted=predicted_model)
+predicted_model_2 <- predict( modelo_trials_2, testx2, type="class" )
+mat_conf_2<-table(testy2,Predicted=predicted_model_2)
 
-porcentaje_correct<-100 * sum(diag(mat_conf)) / sum(mat_conf)
-print(sprintf("El %% de registros correctamente clasificados es: %.4f %%",porcentaje_correct))
+porcentaje_correct_2<-100 * sum(diag(mat_conf_2)) / sum(mat_conf_2)
+print(sprintf("El %% de registros correctamente clasificados es: %.4f %%",porcentaje_correct_2))
 
 ```
 
-Se aprecia que la precisión con trials es 83.33% que es mejor que sin trials que era 85.29%.
+Se aprecia que la precisión con trials es  82.6797 % que es mejor que sin trials que era 85.29%.
 
 Finalmente, se crea la matriz de confusión:
 
 
 ```{r,eval=TRUE,echo=TRUE}
 
-CrossTable(testy, predicted_model,prop.chisq  = FALSE, prop.c = FALSE, prop.r =FALSE,dnn = c('Reality', 'Prediction'))
+CrossTable(testy2, predicted_model_2,prop.chisq  = FALSE, prop.c = FALSE, prop.r =FALSE,dnn = c('Reality', 'Prediction'))
 
 ```
+```{r,eval=TRUE,echo=TRUE}
 
+modelo_clasificacion_rpart_2 <- rpart(formula = trainy2 ~ ., data = trainx2, method = "class" )
+rpart.plot(modelo_clasificacion_rpart_2, type=2,extra = 8, under = TRUE, faclen=5,cex=.85) 
+
+```
 Se aprecia que el verdadero positivo es 32.4% frente a un 0.59% de falsos positivos. Por lo tanto, tiene una alta sensibilidad. 
 Por otro lado, se observa que los verdaderos negativos es 51% frente a un 10.8% de falsos negativos, entonces se puede decir que tiene una alta especificidad.
 
 AÑADIR VARIABLES DISCRETAS
+
+
+
+
 
 # Visualización
 
