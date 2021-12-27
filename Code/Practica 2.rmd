@@ -9,6 +9,12 @@ output:
     theme: cosmo
     toc: yes
     toc_depth: 2
+    includes:
+      in_header: PEC-header.html
+  word_document: default
+  pdf_document:
+    highlight: zenburn
+    toc: yes
 ---
 
 ******
@@ -96,7 +102,7 @@ str(heart)
 <li> __ST_Slope__ : pendiente del segmento ST del ejercicio pico. </li>
 <li> __HeartDisease__   : clase de salida. </li>
 
-<br>
+
 
 Vamos a realizar una explicación más extensa de cada variable según los criterios médicos para conocer estos conceptos y su influencia respecto a la hora de sufrir una enfermedad cardíaca.
 
@@ -1127,7 +1133,7 @@ En el primer árbol Observamos las tasas de clasificación para cada nodo, expre
 ```{r,eval=TRUE,echo=TRUE}
 
 predicted_model <- predict( modelo_clasificacion_rpart, testx, type="class" )
-print(sprintf("La precisión del modelo4 es: %.4f %%",100*sum(predicted_model == testy) / length(predicted_model)))
+print(sprintf("La precisión del modelo es: %.4f %%",100*sum(predicted_model == testy) / length(predicted_model)))
 
 ```
 
@@ -1236,8 +1242,12 @@ Variable **MaxHR**, no tiene sentido discretizar esta variable.
 Variable **OldPeak**:
 
 ```{r,eval=TRUE,echo=TRUE}
+summary(heart[,"Oldpeak"])
+```
 
-heart_2["oldpeak_discretizado"] <- cut(heart$Oldpeak, breaks = c(-2,0,2,4,6,8,10), labels = c(0, 1, 2, 3,4,5))
+```{r,eval=TRUE,echo=TRUE}
+
+heart_2["oldpeak_discretizado"] <- cut(heart$Oldpeak, breaks = c(-3,0,2,4,6,8,10), labels = c(0, 1, 2, 3,4,7))
 
 ```
 
@@ -1300,9 +1310,10 @@ Creamos el modelo con técnicas de Boosting, 100 intentos:
 
 ```{r,eval=TRUE,echo=TRUE}
 
-modelo_trials_2 <- C50::C5.0(trainx2, trainy2, trials = 100, rules = FALSE)
+modelo_trials_2 <- C50::C5.0(trainx2, trainy2,rules=TRUE, trials = 100,control = C5.0Control(noGlobalPruning = FALSE) )
 
 ```
+
 
 Ahora, calculamos la precisión del modelo a partir de la matriz de confianza.
 
@@ -1317,7 +1328,7 @@ print(sprintf("El %% de registros correctamente clasificados es: %.4f %%",porcen
 
 ```
 
-Se aprecia que la precisión con trials es  82.6797 % que es mejor que sin trials que era 85.29%.
+Se aprecia que la precisión con trials es  82.3529 %.
 
 Finalmente, se crea la matriz de confusión:
 
@@ -1333,13 +1344,8 @@ modelo_clasificacion_rpart_2 <- rpart(formula = trainy2 ~ ., data = trainx2, met
 rpart.plot(modelo_clasificacion_rpart_2, type=2,extra = 8, under = TRUE, faclen=5,cex=.85) 
 
 ```
-Se aprecia que el verdadero positivo es 32.4% frente a un 0.59% de falsos positivos. Por lo tanto, tiene una alta sensibilidad. 
-Por otro lado, se observa que los verdaderos negativos es 51% frente a un 10.8% de falsos negativos, entonces se puede decir que tiene una alta especificidad.
 
-AÑADIR VARIABLES DISCRETAS
-
-
-
+Realizar el nuevo modelo con boosting de 100 intentos y añadiendo las variables discretizadas lamentablemente no ha mejorado la precisión del modelo. Por otro lado, hemos podido obtener un conjunto de datos más completo y ordenado y además estas nuevas variables discretas nos permitirán a continuación realizar un análisis gráfico más eficiente. 
 
 
 # Visualización
@@ -1348,58 +1354,65 @@ Vamos a realizar diferentes estudios gráficos para analizar las distintas varia
 
 Para ello, diferenciaremos entre los tipos de variables continuas y discretas para su análisis y sí fuera necesario transformaremos las variables para su estudio más eficiente. 
 
-
-Variables discretas:
-
 ```{r}
 library(ggplot2)
-ggplot(data=heart,aes(x=Age_dist,fill=(factor(HeartDisease))))+geom_bar() + ggtitle("Enfermedad Cardiaca por grupo de edad(G1)") + labs(x="Edad", colour= "HeartDisease") 
+ggplot(data=heart_2,aes(x=edad_discretizada,fill=HeartDisease))+geom_bar() + ggtitle("Tipo de trastorno por edad(G1)") + labs(x="Edad", colour= "Diagnóstico") 
+
+ggplot(data=heart_2,aes(x=chol_discretizado,fill=HeartDisease))+geom_bar() + ggtitle("Tipo de trastorno por coresterol(G2)") + labs(x="Nivel de Coresterol", colour= "Diagnóstico")
+
+ggplot(data=heart_2,aes(x=restingBP_discretizado, fill=HeartDisease))+geom_bar() + ggtitle("Tipo de trastorno por presión arterial(G3)") + labs(x="Presión Arterial", colour= "Diagnóstico")  + theme(text = element_text(size=12),  axis.text.x = element_text(angle=90, hjust=1))
+
+ggplot(data=heart_2,aes(x=oldpeak_discretizado,fill=HeartDisease))+geom_bar() + ggtitle("Tipo de trastorno por oldpeak (G4)") + labs(x="Oldpeak", colour= "Diagnóstico")
+```
+Observando los gráficos anteriores podemos llevar a cabo las siguientes conclusiones:
+
+G1 - La variable edad influye en el riesgo de padecer enfermedades cardíacas o no, cuanto mayor es la edad del paciente mayor es la probabilidad de sufrir una enfermedad cardíaca.
+
+G2 - Cuanto mayor es el nivel de colesterol más riesgo existe de sufrir estas enfermedades aunque no es una variable decisiva.
+
+G3 - La presión arterial es un factor de riego importante para prevenir estas enfermedades, siendo mayor de 140 un factor crítico.
+
+G4 - Sin duda, gráficamente podemos observar que la variable discretizada más relevante es oldpeak, cuando la depresión del ST es mayor que cero el riesgo es crítico
 
 
-ggplot(data=heart,aes(x=Sex,fill=factor(HeartDisease)))+geom_bar() + ggtitle("Enfermedad Cardiaca por sexo(G2)") + labs(x="sexo", colour= "HeartDisease") 
+
+A continuación y para completar el análisis gráfico vamos a realizar el análisis gráfico de las variables más relevantes en referencia al análisis PCA y si tienen riesgo de sufirir o no un ataque cardíaco en relación con la edad:
 
 
-ggplot(data=heart,aes(x=ChestPainType,fill=factor(HeartDisease)))+geom_bar() + ggtitle("Enfermedad Cardiaca por ChestPainType(G3)") + labs(x="ChestPainType", colour= "HeartDisease") 
+```{r}
+ggplot(data = heart_2,aes(x=edad_discretizada,fill=HeartDisease))+geom_bar(position="fill")+facet_wrap(~Sex)+ theme(text = element_text(size=8)) + ggtitle("Diagnóstico por Edad y Sexo (G5)") + labs(x="Gender", y="", colour= "Diagnóstico") + theme(text = element_text(size=12),  axis.text.x = element_text(angle=90, hjust=1))
 
+ggplot(data = heart_2,aes(x=edad_discretizada,fill=HeartDisease))+geom_bar(position="fill")+facet_wrap(~ChestPainType)+ theme(text = element_text(size=8)) + ggtitle("Diagnóstico por Edad y Tipo de dolor de pecho (G6)") + labs(x="Tipo de dolor", y="", colour= "Diagnóstico") + theme(text = element_text(size=12),  axis.text.x = element_text(angle=90, hjust=1))
 
-ggplot(data=heart,aes(x=RestingECG,fill=factor(HeartDisease)))+geom_bar() + ggtitle("Enfermedad Cardiaca por RestingECG(G4)") + labs(x="RestingECG", colour= "HeartDisease") 
+ggplot(data = heart_2,aes(x=edad_discretizada,fill=HeartDisease))+geom_bar(position="fill")+facet_wrap(~ST_Slope)+ theme(text = element_text(size=8)) + ggtitle("Diagnóstico por Edad y pendiente del pico del segmento (G7)") + labs(x="Edad", y="", colour= "Diagnóstico") + theme(text = element_text(size=12),  axis.text.x = element_text(angle=90, hjust=1))
 
-# ExerciseAngina & HeartDisease
-ggplot(data=heart,aes(x=ExerciseAngina,fill=factor(HeartDisease)))+geom_bar() + ggtitle("Enfermedad Cardiaca por ExerciseAngina(G5)") + labs(x="ExerciseAngina", colour= "HeartDisease") 
+ggplot(data = heart_2,aes(x=edad_discretizada,fill=HeartDisease))+geom_bar(position="fill")+facet_wrap(~oldpeak_discretizado)+ theme(text = element_text(size=8)) + ggtitle("Diagnóstico por Edad y depresión del oldpeak (G8)") + labs(x="Edad", y="", colour= "Diagnóstico") + theme(text = element_text(size=12),  axis.text.x = element_text(angle=90, hjust=1))
 
-# ST_Slope & HeartDisease
-ggplot(data=heart,aes(x=ST_Slope,fill=factor(HeartDisease)))+geom_bar() + ggtitle("Enfermedad Cardiaca por ST_Slope(G6)") + labs(x="ST_Slope", colour= "HeartDisease") 
+ggplot(data = heart_2,aes(x=edad_discretizada,fill=HeartDisease))+geom_bar(position="fill")+facet_wrap(~ExerciseAngina)+ theme(text = element_text(size=8)) + ggtitle("Diagnóstico por Edad y angina inducida por el ejercicio 1:si 0:no (G9)") + labs(x="Edad", y="", colour= "Diagnóstico") + theme(text = element_text(size=12),  axis.text.x = element_text(angle=90, hjust=1))
 
-# FastingBS & HeartDisease
-ggplot(data=heart,aes(x=FastingBS,fill=factor(HeartDisease)))+geom_bar() + ggtitle("Enfermedad Cardiaca por FastingBS(G7)") + labs(x="FastingBS", colour= "HeartDisease") 
+ggplot(data = heart_2,aes(x=edad_discretizada,fill=HeartDisease))+geom_bar(position="fill")+facet_wrap(~restingBP_discretizado)+ theme(text = element_text(size=8)) + ggtitle("Diagnóstico por Edad y Presión arterial en reposo (G10)") + labs(x="Edad", y="", colour= "Diagnóstico") + theme(text = element_text(size=12),  axis.text.x = element_text(angle=90, hjust=1))
 
 ```
 
 
+G5 - Los hombres tienen más probabilidad de sufrir enfermedades cardíacas y esta aumenta conforme su edad aumenta.
 
-Observando los gráficos anteriores podemos llevar a cabo las siguientes conclusiones:
+G6 - Aquellas personas asintomáticas, seguidas de un dolor no anginoso son las más vulnerables. No tener síntomas de este tipo, no garantiza no sufrir una enfermedad cardíaca
 
-G1: La edad influye en el riesgo o no de sufrir una enfermedad cardíaca, de 60 a 80 años el riesgo de sufrir una enfermedad cardíaca es mayor.
+G7 - Observando la relación entre ST_Slope y la edad, concluimos que una pendiente del pico del segmento ST, plana es sinónimo de enfermedad cardíaca para todos los grupos de edad y una pendiente descendente también confirma un riesgo de enfermedad cardíaca, especialmente para las edades más avanzadas.
 
-G2: Los hombres tienen más posibilidades de sufrir una enfermedad cardíaca que las mujeres
-G3:
-G4:
-G5:
-G6:
-G7:
+G9 - La variable oldpeak, es determinante, para valores mayores que uno el riesgo para todas las edades es mayor al 50%, si la depresión es mayor o igual que 2 estamos hablando de un riesgo mayor que el 70%.
 
+G9 - Si la angina ha sido enducida por el ejercicio, el riesgo de padecer una enfermedad cardíaca es muy alta para todas las edades, incrementándose cuando esta aumenta.
 
-
-Utilizamos las variables discretizadas anteriormente para realizar gráficos más representativos:
-
-AÑADIR GRÁFICOS
+G10 - La variable presión arterial en reposo es importante a la hora de padecer enfermedades cardíacas en edades superiores a los 50 años y conforme la edad aumenta y la presión arterial también lo hace este riesgo es mayor.
 
 
+# Exportamos el conjunto de datos
 
-COMENTAR CONCLUSIONES DE CADA GRÁFICO y añadir más gráficos si fuera necesario
-
-CSV FINAL
-
+```{r}
+write.csv(heart_2,"../Data/heart_out.csv", row.names = FALSE)
+```
 
 # Conclusiones
 
@@ -1407,6 +1420,7 @@ añadir
 
 CUANDO ES MEJOR UN MODELO DE REGRESION LOGISITICA O UNO DE CLASIFICACION
 
+******
 
 # Contribuciones
 
@@ -1420,4 +1434,8 @@ CUANDO ES MEJOR UN MODELO DE REGRESION LOGISITICA O UNO DE CLASIFICACION
 
 Enlace Vídeo: 
 
-Enlace repositorio GitHub: 
+Enlace repositorio GitHub: https://github.com/bsantosn/LIMPIEZA_DATOS.git
+
+******
+
+******
