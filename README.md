@@ -1,4 +1,6 @@
-# Práctica 2: Limpieza y análisis de datos. Estudio del riesgo de sufrir enfermedades cardíacas. 
+# Práctica 2: Limpieza y Análisis de los datos. 
+
+Estudio del riesgo de sufrir enfermedades cardíacas. 
 
 ## Integrantes ✒️:
 
