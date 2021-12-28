@@ -1,4 +1,4 @@
-# Práctica 2: Limpieza y análisis de datos. Heart Deases 
+# Práctica 2: Limpieza y análisis de datos. Estudio del riesgo de sufrir enfermedades cardíacas. 
 
 ## Integrantes ✒️:
 
