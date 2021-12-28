@@ -1,7 +1,7 @@
 ---
-title: "Practica 2"
+title: "Práctica 2: Limpieza y Análisis de los datos"
 author: "Brais Santos Negreira / Jorge Álvarez Gracia"
-date: "Diciembre 2021"
+date: "Estudio del riesgo de sufrir enfermedades cardíacas. Diciembre 2021"
 output: 
   html_document:
     highlight: default
@@ -42,7 +42,7 @@ Como datos llamativos:
 
 • Más del 75% de las muertes causadas por ECV se producen en países de ingresos medios y bajos.
 
-En España y como podemos leer en la web de la Sociedad Española de Cardiología (SEC): La enfermedad cardiovascular continúa siendo la primera causa de muerte en nuestro país, con 120.859 fallecimientos registrados al año, según los últimos datos del Instituto Nacional de Estadística (2018).
+En España y como podemos leer en la web de la Sociedad Española de Cardiología (SEC): La enfermedad cardiovascular continúa siendo la primera causa de muerte en nuestro país, con 120.859 fallecimientos registrados al año, según los últimos datos del Instituto Nacional de Estadística (2018). 
 
 Si nos fijamos en el segundo punto de las afirmaciones de la OMS, el 80% de los infartos se pueden prevenir. Esto significa que con un estudio pormenorizado de los factores de riesgo, utilizando la cantidad de datos médicos existentes y modelos de machine learning, estas causas de defunción se podrían disminuir considerablemente pudiendo prever con antelación que grupos de población con sus respectivas características médicas van a tener más riesgos que otros.
 
@@ -965,7 +965,7 @@ CrossTable(test$HeartDisease,predicion_1,prop.chisq  = FALSE, prop.c = FALSE, pr
 
 print(sprintf("La precisión del modelo es: %.4f %%",100*(158/184)))
 ```
-EXPLICACION Y REVISION
+
 
 ## Modelos de clasificación
 
@@ -1062,7 +1062,7 @@ Se observa que los atributos que más se usan en este modelo son “ST_Slope” 
 
 Además, se han obtenido una serie de reglas que el modelo ha acogido como decisivas para observar si una persona tiene riesgo de enfermedad del corazón. Todas estas se explican a continuación:
 
-REVISAR
+
 
     1. Si una persona es de género femenino, tiene una presión arterial menor o igual que 148, un azúcar en sangre menor o igual a 0 y no tiene angina inducida por el ejercicio, no tendrá enfermedad del corazón con un 97.5%.
     
@@ -1170,7 +1170,6 @@ A continuación, utilizamos otro enfoque para comparar los resultados: incorpora
 Además discretearemos el resto de variables continuas para intentar mejorar el modelo anterior , ya que los modelos de clasificación se compartan mejor con variables categóricas. Este proceso también nos servirá de utilidad a la hora de hacer representaciones gráficas más representativas.
 
 Creamos un nuevo dataframe.
-
 
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -1415,9 +1414,43 @@ write.csv(heart_2,"../Data/heart_out.csv", row.names = FALSE)
 
 # Conclusiones
 
-añadir
+Durante este proyecto hemos introducido todos aquellos puntos más relevantes estudiados en la asignatura. Para ello elegimos el conjunto de datos referente al estudio de aquellas variables relevantes a la hora de sufrir o no una enfermedad cardiovascular. Lo elegimos por varias razones, la primera: nos resultaba interesante ya que es este tipo de enfermedades es la mayor causa de mortalidad en el mundo y gracias a técnicas más avanzadas de machine learning pensamos que se podrían salvar muchas vidas. Por otro lado, el conjunto de datos disponía de un tipo variado de datos con los que poder trabajar. El conjunto de datos estaba bastante limpio de tal manera que hemos tenido más énfasis en la parte del análisis, aún así, hemos implementado las técnicas estudiadas. 
 
-CUANDO ES MEJOR UN MODELO DE REGRESION LOGISITICA O UNO DE CLASIFICACION
+Dividimos el proyecto en dos partes: la primera limpieza y preporcesado y la segunda el análisis de los datos.
+
+En concreto en el proceso de limpieza y preporcesado hemos realizado las siguientes tareas:
+
+    - Conversión de cada variable al tipo de dato más adecuado.
+    - Eestudio de Outliers.
+    - Reazidado un estudio de los valores nulos.
+    - Sustitución de los valores nulos mediante el algoritmo de KNN
+    - Análisis de los componentes principales: PCA.
+    - Normalización min-max, de la variable edad (Para prácticar con esta técnica).
+    - Discretización de la variable edad (Para prácticar con esta técnica).
+
+En la segunda parte, al igual que en la primera hemos realizado los distintos procesos estudiados en la asignatura:
+
+    - Estudio descriptivo de las variables.
+    - Estudio de normalidad de las variables.
+    - Contraste de hipótesis.
+    - Estudio de correlación entre las variables.
+    - Regresión lineal
+    - Regresión lógistica
+    - Modelos de clasificación: Árboles de decisón.
+    
+Gracias a estos análisis hemos llegado a las siguientes conclusiones, ordenadas según los análisis comentados previamente:
+
+    - Las mujeres tienen más colesterol que los hombres. 
+    - Los hombres con enfermedad cardíaca tienen el mismo nivel de azúcar en sangre que las mujeres con enfermedad cardíaca.
+    - Las variables que tienen más correlación con padecer o no una enfermedad cardíaca son:  MaxHR, ExerciseAngina,Olpeak y ST_Slope.
+    - Hemos creado un modelo de regresión logistica múltiple capaz de clasificar los datos con un 85.87% de efectividad.
+    - Hemos creado distintas reglas de decisión a través de un modelo de clasificación con arboles de decisión.
+    - Este modelo predice los datos con una precisón de 85.3%.
+    
+
+
+Para completar el trabajo, hemos realizado un análisis gráfico de la relación entre las distintas variables categorizadas, distinguiendo por grupos de edad y riesgo de sufrir una enfermedad cardíaca o no.
+
 
 ******
 
