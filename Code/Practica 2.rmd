@@ -309,7 +309,7 @@ Para esos 0, hemos metido NA ya que es un valor desconocido y ahora miraremos me
 
 Para solucionar estos valores perdidos, vamos a hacer uso de la función KNN.
 
-El algoritmo KNN o imputación del vecino más cercano es un algoritmo supervisado cuyo objetivo es que a partir de un juego de datos inicial clasificar correctamente las instancias nuevas. en nuestro caso los valores nulos. 
+El algoritmo KNN o imputación del vecino más cercano es un algoritmo supervisado cuyo objetivo es que a partir de un juego de datos inicial clasificar correctamente las instancias nuevas. En nuestro caso los valores nulos. 
 
 KNN buscará las distancias entre una consulta y todos los ejemplos en los datos, seleccionando el número especificado ejemplos (K) más cercanos al registro que queremos clasificar y seguidamente elegirá el valor más frecuente
 
@@ -544,7 +544,7 @@ lillie.test(heart$Age)
 
 ```
 
-Obserando ambos test, se puede apreciar que la variable **Age**no sigue una distribución normal.
+Obserando ambos test, se puede apreciar que la variable **Age** no sigue una distribución normal.
 
 __RestingBP__
 
@@ -555,7 +555,7 @@ qqline(heart$RestingBP)
 
 ```
 
-Observando el gáfico la variable **RestingBP**  no sigue una distribucción normal.
+Observando el gáfico la variable **RestingBP**  no sigue una distribución normal.
 
 __Cholesterol__
 
@@ -577,7 +577,7 @@ qqline(heart$MaxHR)
 
 ```
 
-Se observa que los puntos suelen seguir la recta, menos en loslados.
+Se observa que los puntos suelen seguir la recta, menos en los lados.
 
 Para estar más seguros aplicamos los test de shapiro y Lilliefors.
 
@@ -725,9 +725,9 @@ carMuj <- heart$FastingBS[heart$Sex=="F" & heart$HeartDisease=="1"]
 
 ```
 
-Como hipótesis nula, se quiere saber si las enfermedades cardíacas es igual en hombres que en mujeres.
+Como hipótesis nula, se quiere saber si el azúcar en sangre con enfermedades cardíacas es igual en hombres que en mujeres.
 
-Como hipótesis alternativa se quiere saber si las enfermedades cardíacas es mayor en hombres que en mujeres.
+Como hipótesis alternativa se quiere saber si el azúcar en sangre con enfermedades cardíacas es mayor en hombres que en mujeres.
 
 $$
 \left\{
@@ -917,7 +917,7 @@ hoslem.test(heart$HeartDisease,fitted(model_logis2))
 ```
 Se aprecia que el modelo tiene p-value > 0.05. Por tanto, ajusta bien los datos.
 
-Vamos a dividir el conjunto de los datos en un conjunto de entrenamiento y otro de prueba para validar el modelo.
+Vamos a dividir el conjunto de los datos en un conjunto de entrenamiento (tendrá el 80% de los datos) y otro de prueba para validar el modelo (el 20% restante).
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -929,6 +929,7 @@ test <- heart[-index,]
 
 ```
 
+Entrenamos el modelo con el conjunto de datos de entrenamiento.
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -937,6 +938,7 @@ summary(model_logis3)
 
 ```
 
+Asumiremos que la predicción del modelo es 1  si la probabilidad del modelo de regresión logística es superior o igual a 0.5 y 0 de lo contrario.
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -950,6 +952,9 @@ mat_conf_1<-table(test$HeartDisease,Predicted=predicion_1)
 mat_conf_1
 
 ```
+
+
+Creamos la matriz de confusión del modelo:
 
 ```{r,eval=TRUE,echo=TRUE}
 if(!require(gmodels)){
@@ -988,7 +993,7 @@ Para la futura evaluación del árbol de decisión, es necesario dividir el conj
 Lo más correcto será utilizar un conjunto de datos diferente del que utilizamos para construir el árbol, es decir, un conjunto diferente del de entrenamiento. No hay ninguna proporción fijada con respecto al número relativo de componentes de cada subconjunto, pero la más utilizada acostumbra a ser 2/3 para el conjunto de entrenamiento y 1/3, para el conjunto de prueba.
 
 La variable por la que clasificaremos es HeartDisease, para clasificar si existe riesgo de enfermedad cardíaca o no, y que se sitúa en nuestro en la columna, la 12. De esta forma, tendremos un conjunto de datos para el entrenamiento y uno para la validación.
-Para clasificar dicha variable utilizaremos tpdas las variables anteriores excepto la edad normalizada y la edad discreta. 
+Para clasificar dicha variable utilizaremos todas las variables anteriores excepto la edad normalizada y la edad discreta. 
 
 ```{r,eval=TRUE,echo=TRUE}
 
@@ -1068,11 +1073,11 @@ Además, se han obtenido una serie de reglas que el modelo ha acogido como decis
     
     2. Una persona con dolor de pecho NAP, una presión arterial menor o igual que 132, una máxima frecuencia cardíaca de 150, tendrá una probabilidad de no tener enfermedad del corazón con un 90.5%.
     
-    3. Con una probabilidad del 87.8%, una persona con dolor de pecho ATA/TA y una máxima frecuencia cardíaca mayor que 150, no tednrá una enfermedad cardíaca.
+    3. Con una probabilidad del 87.8%, una persona con dolor de pecho ATA/TA y una máxima frecuencia cardíaca mayor que 150, no tendrá una enfermedad cardíaca.
     
     4. Una persona cuyo ST_Slope es Up, no tendrá una enfermedad del corazón con un 82.8%.
     
-    5. Una persona con dolor de epcho ASY, una presión arterial menor o igual que 131, azúcar en sangre mayor que 0, tendrá una enfermedad cardíaca con una probabilidad de 98.1%.
+    5. Una persona con dolor de pecho ASY, una presión arterial menor o igual que 131, azúcar en sangre mayor que 0, tendrá una enfermedad cardíaca con una probabilidad de 98.1%.
     
     6. Con una probabilidad del 96%, una persona con dolor de pecho ASY, el colesterol menor o igual a 197 y con angina inducida por el ejercicio, tendrá una enfermedad del corazón.
     
@@ -1167,7 +1172,7 @@ Por otro lado, se observa que los verdaderos negativos es 51.6% frente a un 10.1
 
 A continuación, utilizamos otro enfoque para comparar los resultados: incorporar como novedad “adaptative boosting”. La idea de esta técnica es generar varios clasificadores, con sus correspondientes arboles de decisión y su ser de reglas. Cuando un nuevo caso va a ser clasificado, cada clasificador vota cual es la clase predicha. Los votos son sumados y determina la clase final.
 
-Además discretearemos el resto de variables continuas para intentar mejorar el modelo anterior , ya que los modelos de clasificación se compartan mejor con variables categóricas. Este proceso también nos servirá de utilidad a la hora de hacer representaciones gráficas más representativas.
+Además discretearemos el resto de variables continuas para intentar mejorar el modelo anterior , ya que los modelos de clasificación se comportan mejor con variables categóricas. Este proceso también nos servirá de utilidad a la hora de hacer representaciones gráficas más representativas.
 
 Creamos un nuevo dataframe.
 
@@ -1195,7 +1200,7 @@ heart_2["edad_discretizada"] <- cut(heart$Age, breaks = c(0,40,55,65,100), label
 ```
 
 
-Variable **RestingBP**T, Presión arterial:
+Variable **RestingBP**, Presión arterial:
 
 Para esta variable también tendremos en cuenta las categorías establecidas por los cardiólogos:
 
@@ -1221,7 +1226,7 @@ heart_2["chol_discretizado"] <- cut(heart$Cholesterol, breaks = c(-1,200,240,100
 
 ```
 
-Variable **FastingBS**, un nivel de glucosa sanguínea en ayunas por debajo de 100 miligramos por decilitro (mg/dl) (5,6 milimoles por litro [mmol/l]) se considera normal. Un nivel de glucosa sanguínea en ayunas entre 100 y 125 mg/dL (5,6 a 7,0 mmol/L ) se considera prediabetes. En este caso, tenemos una variable binaria. 0 representa normal y 1 alta. factorizamos dicha variable. 
+Variable **FastingBS**, un nivel de glucosa sanguínea en ayunas por debajo de 100 miligramos por decilitro (mg/dl) (5,6 milimoles por litro [mmol/l]) se considera normal. Un nivel de glucosa sanguínea en ayunas entre 100 y 125 mg/dL (5,6 a 7,0 mmol/L ) se considera prediabetes. En este caso, tenemos una variable binaria. 0 representa normal y 1 alta. Factorizamos dicha variable. 
 
 ```{r,eval=TRUE,echo=TRUE}
 heart_2$FastingBS <- as.factor(heart_2$FastingBS)
@@ -1336,12 +1341,10 @@ Finalmente, se crea la matriz de confusión:
 CrossTable(testy2, predicted_model_2,prop.chisq  = FALSE, prop.c = FALSE, prop.r =FALSE,dnn = c('Reality', 'Prediction'))
 
 ```
-```{r,eval=TRUE,echo=TRUE}
+Se aprecia que los verdaderos positivos son un 32.7% frente a un 5.6% de falsos positivos. Por lo tanto, tiene una alta sensibilidad.
+Por otro lado, se observa que los verdaderos negativos es 49.7% frente a un 12.1% de falsos negativos, entonces se puede decir que tiene una alta especificidad.
 
-modelo_clasificacion_rpart_2 <- rpart(formula = trainy2 ~ ., data = trainx2, method = "class" )
-rpart.plot(modelo_clasificacion_rpart_2, type=2,extra = 8, under = TRUE, faclen=5,cex=.85) 
 
-```
 
 Realizar el nuevo modelo con boosting de 100 intentos y añadiendo las variables discretizadas lamentablemente no ha mejorado la precisión del modelo. Por otro lado, hemos podido obtener un conjunto de datos más completo y ordenado y además estas nuevas variables discretas nos permitirán a continuación realizar un análisis gráfico más eficiente. 
 
@@ -1362,6 +1365,7 @@ ggplot(data=heart_2,aes(x=restingBP_discretizado, fill=HeartDisease))+geom_bar()
 
 ggplot(data=heart_2,aes(x=oldpeak_discretizado,fill=HeartDisease))+geom_bar() + ggtitle("Tipo de trastorno por oldpeak (G4)") + labs(x="Oldpeak", colour= "Diagnóstico")
 ```
+
 Observando los gráficos anteriores podemos llevar a cabo las siguientes conclusiones:
 
 G1 - La variable edad influye en el riesgo de padecer enfermedades cardíacas o no, cuanto mayor es la edad del paciente mayor es la probabilidad de sufrir una enfermedad cardíaca.
@@ -1374,7 +1378,7 @@ G4 - Sin duda, gráficamente podemos observar que la variable discretizada más 
 
 
 
-A continuación y para completar el análisis gráfico vamos a realizar el análisis gráfico de las variables más relevantes en referencia al análisis PCA y si tienen riesgo de sufirir o no un ataque cardíaco en relación con la edad:
+A continuación y para completar el análisis gráfico vamos a realizar el análisis gráfico de las variables más relevantes en referencia al análisis PCA y si tienen riesgo de sufrir o no un ataque cardíaco en relación con la edad:
 
 
 ```{r}
@@ -1422,7 +1426,7 @@ En concreto en el proceso de limpieza y preporcesado hemos realizado las siguien
 
     - Conversión de cada variable al tipo de dato más adecuado.
     - Eestudio de Outliers.
-    - Reazidado un estudio de los valores nulos.
+    - Realizado un estudio de los valores nulos.
     - Sustitución de los valores nulos mediante el algoritmo de KNN
     - Análisis de los componentes principales: PCA.
     - Normalización min-max, de la variable edad (Para prácticar con esta técnica).
@@ -1464,7 +1468,7 @@ Para completar el trabajo, hemos realizado un análisis gráfico de la relación
 
 # Recursos
 
-Enlace Vídeo: 
+Enlace Vídeo: https://drive.google.com/drive/folders/1QObrmV2T0MWDYwsA_mvcrQ-m5H7otG8p?usp=sharing
 
 Enlace repositorio GitHub: https://github.com/bsantosn/LIMPIEZA_DATOS.git
 
