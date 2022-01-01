@@ -1093,7 +1093,6 @@ Además, se han obtenido una serie de reglas que el modelo ha acogido como decis
     
     12. Una persona con ST_Slope down/flat, tendrá una enfermedad cardíaca con un 80.1%.
 
-Viendo todo esto, se puede decir que una persona que no sufre dolor de angina inducida por el ejercicio, con azúcar en sangre menor o igual a 0 y una presión arterial menor o igual a 148, su posibilidad de terner enfermedades cardíacas será muy baja.
 
 
 ```{r,eval=TRUE,echo=TRUE}
@@ -1120,7 +1119,7 @@ summary(modelo_clasificacion_rpart)
 
 ```
 
-Vamos a representar gráficamente el arbol obtenido de dos maneras diferentes:
+Vamos a representar gráficamente el árbol obtenido de dos maneras diferentes:
 
 ```{r,eval=TRUE,echo=TRUE}
 
